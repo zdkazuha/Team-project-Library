@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "yhzzGKfOAUo=",
+  "dgSpecHash": "W4IZ1fQQDzw=",
   "success": true,
-  "projectFilePath": "C:\\Users\\aarte\\OneDrive\\Desktop\\-\\Repositories\\My repositories\\Нова папка\\Library-backend\\Library\\BusinessLogic\\BusinessLogic.csproj",
+  "projectFilePath": "C:\\Users\\aarte\\OneDrive\\Desktop\\-\\Repositories\\My repositories\\Нова папка (4)\\Library-backend\\Library\\BusinessLogic\\BusinessLogic.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\aarte\\.nuget\\packages\\automapper\\15.1.0\\automapper.15.1.0.nupkg.sha512",
     "C:\\Users\\aarte\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.0\\microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
