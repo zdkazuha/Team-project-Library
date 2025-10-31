@@ -8,11 +8,11 @@ namespace DataAccess.Data
     {
         public LibraryDbContext(DbContextOptions<LibraryDbContext> options) : base(options) { }
 
-        DbSet<Book> Books { get; set; } = default!;
-        DbSet<Author> Authors { get; set; } = default!;
-        DbSet<Genre> Genres { get; set; } = default!;
-        DbSet<Review> Reviews { get; set; } = default!;
-        DbSet<Borrow> Borrows { get; set; } = default!;
+        public DbSet<Book> Books { get; set; } = default!;
+        public DbSet<Author> Authors { get; set; } = default!;
+        public DbSet<Genre> Genres { get; set; } = default!;
+        public DbSet<Review> Reviews { get; set; } = default!;
+        public DbSet<Borrow> Borrows { get; set; } = default!;
         DbSet<Wishlist> Wishlists { get; set; } = default!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
