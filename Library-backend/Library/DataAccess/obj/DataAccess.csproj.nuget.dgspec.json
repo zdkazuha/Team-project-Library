@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\aarte\\OneDrive\\Desktop\\-\\Repositories\\My repositories\\Нова папка (5)\\Library-backend\\Library\\DataAccess\\DataAccess.csproj": {}
+    "C:\\Users\\rudzi\\Source\\Repos\\Team-project-Library\\Library-backend\\Library\\DataAccess\\DataAccess.csproj": {}
   },
   "projects": {
-    "C:\\Users\\aarte\\OneDrive\\Desktop\\-\\Repositories\\My repositories\\Нова папка (5)\\Library-backend\\Library\\DataAccess\\DataAccess.csproj": {
+    "C:\\Users\\rudzi\\Source\\Repos\\Team-project-Library\\Library-backend\\Library\\DataAccess\\DataAccess.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\aarte\\OneDrive\\Desktop\\-\\Repositories\\My repositories\\Нова папка (5)\\Library-backend\\Library\\DataAccess\\DataAccess.csproj",
+        "projectUniqueName": "C:\\Users\\rudzi\\Source\\Repos\\Team-project-Library\\Library-backend\\Library\\DataAccess\\DataAccess.csproj",
         "projectName": "DataAccess",
-        "projectPath": "C:\\Users\\aarte\\OneDrive\\Desktop\\-\\Repositories\\My repositories\\Нова папка (5)\\Library-backend\\Library\\DataAccess\\DataAccess.csproj",
-        "packagesPath": "C:\\Users\\aarte\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\aarte\\OneDrive\\Desktop\\-\\Repositories\\My repositories\\Нова папка (5)\\Library-backend\\Library\\DataAccess\\obj\\",
+        "projectPath": "C:\\Users\\rudzi\\Source\\Repos\\Team-project-Library\\Library-backend\\Library\\DataAccess\\DataAccess.csproj",
+        "packagesPath": "C:\\Users\\rudzi\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\rudzi\\Source\\Repos\\Team-project-Library\\Library-backend\\Library\\DataAccess\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\aarte\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\rudzi\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -44,7 +44,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.300"
+        "SdkAnalysisLevel": "9.0.200"
       },
       "frameworks": {
         "net9.0": {
@@ -95,7 +95,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.306/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.201/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
