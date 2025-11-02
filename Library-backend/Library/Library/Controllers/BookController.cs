@@ -1,117 +1,60 @@
 ﻿using BusinessLogic.Configurations.DTOs.BookDto;
-using DataAccess.Data;
-using DataAccess.Data.Entities;
+using BusinessLogic.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Library.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class BookController : ControllerBase
     {
-        private readonly LibraryDbContext _context;
+        private readonly IBookService _bookService;
 
-        public BookController(LibraryDbContext context)
+        public BookController(IBookService bookService)
         {
-            _context = context;
+            _bookService = bookService;
         }
 
-        // GET
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BookDto>>> GetBooks()
+        public async Task<IActionResult> GetAll()
         {
-            var books = await _context.Books
-                .Include(b => b.Author)
-                .Include(b => b.Genre)
-                .Select(b => new BookDto
-                {
-                    Id = b.Id,
-                    Title = b.Title,
-                    CoverImage = b.CoverImage,
-                    PublishedDate = b.PublishedDate,
-                    AvailableCopies = b.AvailableCopies,
-                    AuthorId = b.AuthorId,
-                    GenreId = b.GenreId
-                })
-                .ToListAsync();
-
+            var books = await _bookService.GetAllAsync();
             return Ok(books);
         }
 
-        // GET (id)
         [HttpGet("{id}")]
-        public async Task<ActionResult<BookDto>> GetBook(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var book = await _context.Books
-                .Include(b => b.Author)
-                .Include(b => b.Genre)
-                .FirstOrDefaultAsync(b => b.Id == id);
-
+            var book = await _bookService.GetByIdAsync(id);
             if (book == null)
                 return NotFound();
 
-            return Ok(new BookDto
-            {
-                Id = book.Id,
-                Title = book.Title,
-                CoverImage = book.CoverImage,
-                PublishedDate = book.PublishedDate,
-                AvailableCopies = book.AvailableCopies,
-                AuthorId = book.AuthorId,
-                GenreId = book.GenreId
-            });
+            return Ok(book);
         }
 
-        // POST
         [HttpPost]
-        public async Task<ActionResult<Book>> CreateBook([FromBody] BookDto dto)
+        public async Task<IActionResult> Create([FromBody] BookDto bookDto)
         {
-            var book = new Book
-            {
-                Title = dto.Title,
-                CoverImage = dto.CoverImage,
-                PublishedDate = dto.PublishedDate,
-                AvailableCopies = dto.AvailableCopies,
-                AuthorId = dto.AuthorId,
-                GenreId = dto.GenreId
-            };
-
-            _context.Books.Add(book);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetBook), new { id = book.Id }, book);
+            var createdBook = await _bookService.CreateAsync(bookDto);
+            return CreatedAtAction(nameof(GetById), new { id = createdBook.Id }, createdBook);
         }
 
-        // PUT
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateBook(int id, [FromBody] BookDto dto)
+        public async Task<IActionResult> Update(int id, [FromBody] BookDto bookDto)
         {
-            var book = await _context.Books.FindAsync(id);
-            if (book == null)
+            var updatedBook = await _bookService.UpdateAsync(id, bookDto);
+            if (updatedBook == null)
                 return NotFound();
 
-            book.Title = dto.Title;
-            book.CoverImage = dto.CoverImage;
-            book.PublishedDate = dto.PublishedDate;
-            book.AvailableCopies = dto.AvailableCopies;
-            book.AuthorId = dto.AuthorId;
-            book.GenreId = dto.GenreId;
-
-            await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok(updatedBook);
         }
 
-        // DELETE
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBook(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var book = await _context.Books.FindAsync(id);
-            if (book == null)
+            var result = await _bookService.DeleteAsync(id);
+            if (!result)
                 return NotFound();
-
-            _context.Books.Remove(book);
-            await _context.SaveChangesAsync();
 
             return NoContent();
         }

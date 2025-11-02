@@ -2,6 +2,9 @@ using DataAccess.Data;
 using DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 using BusinessLogic.Configurations;
+using BusinessLogic.Interfaces;
+using BusinessLogic.Services;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +30,9 @@ builder.Services.AddDbContext<LibraryDbContext>(options =>
 
 // Repository
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+builder.Services.AddScoped<IBookService, BookService>();
+
 
 var app = builder.Build();
 

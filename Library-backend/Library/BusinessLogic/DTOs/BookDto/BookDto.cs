@@ -15,5 +15,7 @@ namespace BusinessLogic.Configurations.DTOs.BookDto
         public int AvailableCopies { get; set; }
         public int AuthorId { get; set; }
         public int GenreId { get; set; }
+        public string? Description { get; set; }
+        public int PublishedYear { get; set; }
     }
 }
