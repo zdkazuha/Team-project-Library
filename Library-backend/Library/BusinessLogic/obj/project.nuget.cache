@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "WrYV+a3sPuQ=",
+  "dgSpecHash": "m50SS7/KZCE=",
   "success": true,
-  "projectFilePath": "C:\\Users\\aarte\\OneDrive\\Desktop\\-\\Repositories\\My repositories\\Нова папка (2)\\Library-backend\\Library\\BusinessLogic\\BusinessLogic.csproj",
+  "projectFilePath": "C:\\Users\\aarte\\OneDrive\\Desktop\\-\\Repositories\\My repositories\\Нова папка (3)\\Library-backend\\Library\\BusinessLogic\\BusinessLogic.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\aarte\\.nuget\\packages\\automapper\\15.1.0\\automapper.15.1.0.nupkg.sha512",
     "C:\\Users\\aarte\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
