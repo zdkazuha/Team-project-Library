@@ -21,7 +21,7 @@ namespace Library.Controllers
         [Authorize]
         public async Task<IActionResult> GetAll(string? authorName, int pageNumber = 1)
         {
-            var authors = await authorService.GetAll(authorName, pageNumber);
+            var authors = await authorService.GetAllAsync(authorName, pageNumber);
 
             return Ok(authors);
         }
@@ -30,7 +30,7 @@ namespace Library.Controllers
         [Authorize]
         public async Task<IActionResult> GetById(int id)
         {
-            var author = await authorService.GetById(id);
+            var author = await authorService.GetByIdAsync(id);
 
             return Ok(author);
         }
@@ -39,7 +39,7 @@ namespace Library.Controllers
         [Authorize]
         public async Task<IActionResult> Create(CreateAuthorDto dto)
         {
-            var author = await authorService.Create(dto);
+            var author = await authorService.CreateAsync(dto);
 
             return CreatedAtAction(nameof(GetById), new { id = author.Id }, author);
         }
@@ -48,7 +48,7 @@ namespace Library.Controllers
         [Authorize]
         public async Task<IActionResult> Update(int id, UpdateAuthorDto dto)
         {
-            await authorService.Update(id, dto);
+            await authorService.UpdateAsync(id, dto);
             return NoContent();
         }
 
@@ -56,7 +56,7 @@ namespace Library.Controllers
         [Authorize]
         public async Task<IActionResult> Delete(int id)
         {
-            await authorService.Delete(id);
+            await authorService.DeleteAsync(id);
             return NoContent();
         }
 

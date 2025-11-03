@@ -18,7 +18,7 @@ namespace BusinessLogic.Services
             this.mapper = mapper;
         }
 
-        public async Task<AuthorDto> Create(CreateAuthorDto dto)
+        public async Task<AuthorDto> CreateAsync(CreateAuthorDto dto)
         {
             var author = mapper.Map<Author>(dto);
 
@@ -27,7 +27,7 @@ namespace BusinessLogic.Services
             return mapper.Map<AuthorDto>(author);
         }
 
-        public async Task Delete(int id)
+        public async Task DeleteAsync(int id)
         {
             if (id <= 0)
                 throw new Exception("Invalid author id");
@@ -40,7 +40,7 @@ namespace BusinessLogic.Services
             await repo.DeleteAsync(author);
         }
 
-        public async Task<IEnumerable<AuthorDto>> GetAll(string? authorName, int pageNumber)
+        public async Task<IEnumerable<AuthorDto>> GetAllAsync(string? authorName, int pageNumber)
         {
             var filters = PredicateBuilder.New<Author>(true);
 
@@ -55,7 +55,7 @@ namespace BusinessLogic.Services
             return mapper.Map<IList<AuthorDto>>(authors);
         }
 
-        public async Task<AuthorDto> GetById(int id)
+        public async Task<AuthorDto> GetByIdAsync(int id)
         {
             if (id <= 0)
                 throw new Exception("Invalid author id");
@@ -68,7 +68,7 @@ namespace BusinessLogic.Services
             return mapper.Map<AuthorDto>(author);
         }
 
-        public async Task Update(int id, UpdateAuthorDto dto)
+        public async Task UpdateAsync(int id, UpdateAuthorDto dto)
         {
             var author = await repo.GetByIdAsync(id);
 
