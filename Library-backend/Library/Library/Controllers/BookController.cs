@@ -1,5 +1,7 @@
-﻿using BusinessLogic.Configurations.DTOs.BookDto;
+﻿using AutoMapper;
+using BusinessLogic.Configurations.DTOs.BookDto;
 using BusinessLogic.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Controllers
@@ -15,15 +17,17 @@ namespace Library.Controllers
             _bookService = bookService;
         }
 
+        // GET: api/Book?title=Title  
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<IEnumerable<BookDto>>> GetAll([FromQuery] string? title = null)
         {
-            var books = await _bookService.GetAllAsync();
+            var books = await _bookService.GetAllAsync(title);
             return Ok(books);
         }
 
+        // GET: api/Book/{id}
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<ActionResult<BookDto>> GetById(int id)
         {
             var book = await _bookService.GetByIdAsync(id);
             if (book == null)
@@ -32,15 +36,19 @@ namespace Library.Controllers
             return Ok(book);
         }
 
+        // POST: api/Book
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] BookDto bookDto)
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<BookDto>> Create([FromBody] BookDto bookDto)
         {
             var createdBook = await _bookService.CreateAsync(bookDto);
             return CreatedAtAction(nameof(GetById), new { id = createdBook.Id }, createdBook);
         }
 
+        // PUT: api/Book/{id}
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, [FromBody] BookDto bookDto)
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<BookDto>> Update(int id, [FromBody] BookDto bookDto)
         {
             var updatedBook = await _bookService.UpdateAsync(id, bookDto);
             if (updatedBook == null)
@@ -49,7 +57,9 @@ namespace Library.Controllers
             return Ok(updatedBook);
         }
 
+        // DELETE: api/Book/{id}
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
             var result = await _bookService.DeleteAsync(id);

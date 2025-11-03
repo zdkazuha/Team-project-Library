@@ -13,7 +13,7 @@ namespace DataAccess.Data
         public DbSet<Genre> Genres { get; set; } = default!;
         public DbSet<Review> Reviews { get; set; } = default!;
         public DbSet<Borrow> Borrows { get; set; } = default!;
-        DbSet<Wishlist> Wishlists { get; set; } = default!;
+        public DbSet<Wishlist> Wishlists { get; set; } = default!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

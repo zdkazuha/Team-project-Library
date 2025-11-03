@@ -9,7 +9,7 @@ namespace BusinessLogic.Interfaces
 {
     public interface IBookService
     {
-        Task<IEnumerable<BookDto>> GetAllAsync();
+        Task<IEnumerable<BookDto>> GetAllAsync(string? titleFilter = null);
         Task<BookDto> GetByIdAsync(int id);
         Task<BookDto> CreateAsync(BookDto bookDto);
         Task<BookDto> UpdateAsync(int id, BookDto bookDto);

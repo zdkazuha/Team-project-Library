@@ -1,100 +1,83 @@
-﻿using BusinessLogic.Configurations.DTOs.BookDto;
+﻿using AutoMapper;
+using BusinessLogic.Configurations.DTOs.BookDto;
 using BusinessLogic.Interfaces;
 using DataAccess.Data;
 using DataAccess.Data.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace BusinessLogic.Services
 {
     public class BookService : IBookService
     {
         private readonly LibraryDbContext _context;
+        private readonly IMapper _mapper;
 
-        public BookService(LibraryDbContext context)
+        public BookService(LibraryDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public async Task<IEnumerable<BookDto>> GetAllAsync()
+        // Get all books (with optional title filter)
+        public async Task<IEnumerable<BookDto>> GetAllAsync(string? titleFilter = null)
         {
-            var books = await _context.Books.ToListAsync();
+            var query = _context.Books
+                .Include(b => b.Author)
+                .Include(b => b.Genre)
+                .AsQueryable();
 
-            return books.Select(b => new BookDto
+            if (!string.IsNullOrWhiteSpace(titleFilter))
             {
-                Id = b.Id,
-                Title = b.Title,
-                CoverImage = b.CoverImage,
-                PublishedDate = b.PublishedDate,
-                AvailableCopies = b.AvailableCopies,
-                AuthorId = b.AuthorId,
-                GenreId = b.GenreId
-            });
+                query = query.Where(b => b.Title.Contains(titleFilter));
+            }
+
+            var books = await query.ToListAsync();
+            return _mapper.Map<IEnumerable<BookDto>>(books);
         }
 
+        // Get book by ID
         public async Task<BookDto?> GetByIdAsync(int id)
         {
-            var book = await _context.Books.FindAsync(id);
-            if (book == null) return null;
+            var book = await _context.Books
+                .Include(b => b.Author)
+                .Include(b => b.Genre)
+                .FirstOrDefaultAsync(b => b.Id == id);
 
-            return new BookDto
-            {
-                Id = book.Id,
-                Title = book.Title,
-                CoverImage = book.CoverImage,
-                PublishedDate = book.PublishedDate,
-                AvailableCopies = book.AvailableCopies,
-                AuthorId = book.AuthorId,
-                GenreId = book.GenreId
-            };
+            return book == null ? null : _mapper.Map<BookDto>(book);
         }
 
+        // Create new book
         public async Task<BookDto> CreateAsync(BookDto bookDto)
         {
-            var book = new Book
-            {
-                Title = bookDto.Title,
-                CoverImage = bookDto.CoverImage,
-                PublishedDate = bookDto.PublishedDate,
-                AvailableCopies = bookDto.AvailableCopies,
-                AuthorId = bookDto.AuthorId,
-                GenreId = bookDto.GenreId
-            };
-
+            var book = _mapper.Map<Book>(bookDto);
             _context.Books.Add(book);
             await _context.SaveChangesAsync();
 
-            bookDto.Id = book.Id;
-            return bookDto;
+            return _mapper.Map<BookDto>(book);
         }
 
+        // Update existing book
         public async Task<BookDto?> UpdateAsync(int id, BookDto bookDto)
         {
             var book = await _context.Books.FindAsync(id);
-            if (book == null) return null;
+            if (book == null)
+                return null;
 
-            book.Title = bookDto.Title;
-            book.CoverImage = bookDto.CoverImage;
-            book.PublishedDate = bookDto.PublishedDate;
-            book.AvailableCopies = bookDto.AvailableCopies;
-            book.AuthorId = bookDto.AuthorId;
-            book.GenreId = bookDto.GenreId;
-
+            _mapper.Map(bookDto, book);
             await _context.SaveChangesAsync();
 
-            return bookDto;
+            return _mapper.Map<BookDto>(book);
         }
 
+        // Delete book
         public async Task<bool> DeleteAsync(int id)
         {
             var book = await _context.Books.FindAsync(id);
-            if (book == null) return false;
+            if (book == null)
+                return false;
 
             _context.Books.Remove(book);
             await _context.SaveChangesAsync();
-
             return true;
         }
     }
