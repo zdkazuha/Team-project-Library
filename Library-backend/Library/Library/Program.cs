@@ -21,7 +21,6 @@ string SomeeStr = builder.Configuration.GetConnectionString("SomeeStr")
 
 // Controllers
 builder.Services.AddControllers();
-builder.Services.AddScoped<IReviewService, ReviewService>();
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -69,7 +68,7 @@ builder.Services.AddAutoMapper(cfg =>
 builder.Services.AddDbContext<LibraryDbContext>(options =>
     options.UseSqlServer(SomeeStr));
 
-// Repository
+// Repository pattern
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
 // Identity
@@ -91,6 +90,11 @@ builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOpti
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
+
+builder.Services.AddScoped<IReviewService, ReviewService>();
+builder.Services.AddScoped<IBorrowService, BorrowService>(); 
+
+// JWT Authentication
 var jwtOptions = builder.Configuration.GetSection("JwtOptions").Get<JwtOptions>();
 
 builder.Services.AddAuthentication(options =>
@@ -121,7 +125,7 @@ using (var scope = app.Services.CreateScope())
     await RoleSeeder.SeedRolesAndAdminAsync(scope.ServiceProvider);
 }
 
-// HTTP pipeline
+// 🔹 HTTP pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
