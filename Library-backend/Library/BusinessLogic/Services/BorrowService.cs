@@ -1,46 +1,47 @@
 ﻿using AutoMapper;
 using BusinessLogic.Configurations.DTOs.BorrowDto;
 using BusinessLogic.Interfaces;
-using DataAccess.Data;
 using DataAccess.Data.Entities;
+using DataAccess.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace BusinessLogic.Services
 {
     public class BorrowService : IBorrowService
     {
-        private readonly LibraryDbContext _context;
+        private readonly IRepository<Borrow> _borrowRepository;
+        private readonly IRepository<Book> _bookRepository;
         private readonly IMapper _mapper;
 
-        public BorrowService(LibraryDbContext context, IMapper mapper)
+        public BorrowService(IRepository<Borrow> borrowRepository, IRepository<Book> bookRepository, IMapper mapper)
         {
-            _context = context;
+            _borrowRepository = borrowRepository;
+            _bookRepository = bookRepository;
             _mapper = mapper;
         }
 
         public async Task<IEnumerable<BorrowDto>> GetAllAsync()
         {
-            var borrows = await _context.Borrows
-                .Include(b => b.Book)
-                .Include(b => b.User)
-                .ToListAsync();
+            var borrows = await _borrowRepository.GetAllAsync(
+                includes: new[] { nameof(Borrow.Book), nameof(Borrow.User) }
+            );
 
             return _mapper.Map<IEnumerable<BorrowDto>>(borrows);
         }
 
         public async Task<BorrowDto?> GetByIdAsync(int id)
         {
-            var borrow = await _context.Borrows
-                .Include(b => b.Book)
-                .Include(b => b.User)
-                .FirstOrDefaultAsync(b => b.Id == id);
+            var borrow = await _borrowRepository.GetByIdAsync(
+                id,
+                includes: new[] { nameof(Borrow.Book), nameof(Borrow.User) }
+            );
 
             return borrow == null ? null : _mapper.Map<BorrowDto>(borrow);
         }
 
         public async Task<BorrowDto> CreateAsync(CreateBorrowDto dto)
         {
-            var book = await _context.Books.FindAsync(dto.BookId);
+            var book = await _bookRepository.GetByIdAsync(dto.BookId);
             if (book == null)
                 throw new Exception("Book not found.");
 
@@ -55,54 +56,65 @@ namespace BusinessLogic.Services
                 DueDate = dto.DueDate == default ? DateTime.UtcNow.AddDays(14) : dto.DueDate
             };
 
-            book.AvailableCopies -= 1; 
-            _context.Borrows.Add(borrow);
-            await _context.SaveChangesAsync();
+            book.AvailableCopies -= 1;
+            await _bookRepository.UpdateAsync(book);
+
+            await _borrowRepository.AddAsync(borrow);
 
             return _mapper.Map<BorrowDto>(borrow);
         }
 
         public async Task<bool> ReturnBookAsync(int id)
         {
-            var borrow = await _context.Borrows
-                .Include(b => b.Book)
-                .FirstOrDefaultAsync(b => b.Id == id);
+            var borrow = await _borrowRepository.GetByIdAsync(
+                id,
+                includes: new[] { nameof(Borrow.Book) }
+            );
 
             if (borrow == null)
                 return false;
 
-            borrow.ReturnedAt = DateTime.UtcNow;
-            borrow.Book.AvailableCopies += 1; 
+            if (borrow.ReturnedAt != default)
+                throw new Exception("Book already returned.");
 
-            await _context.SaveChangesAsync();
+            borrow.ReturnedAt = DateTime.UtcNow;
+
+            borrow.Book.AvailableCopies += 1;
+
+            await _bookRepository.UpdateAsync(borrow.Book);
+            await _borrowRepository.UpdateAsync(borrow);
+
             return true;
         }
 
         public async Task<bool> UpdateAsync(int id, UpdateBorrowDto dto)
         {
-            var borrow = await _context.Borrows.FindAsync(id);
+            var borrow = await _borrowRepository.GetByIdAsync(id);
             if (borrow == null)
                 return false;
 
             _mapper.Map(dto, borrow);
-            await _context.SaveChangesAsync();
+            await _borrowRepository.UpdateAsync(borrow);
             return true;
         }
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var borrow = await _context.Borrows
-                .Include(b => b.Book)
-                .FirstOrDefaultAsync(b => b.Id == id);
+            var borrow = await _borrowRepository.GetByIdAsync(
+                id,
+                includes: new[] { nameof(Borrow.Book) }
+            );
 
             if (borrow == null)
                 return false;
 
             if (borrow.ReturnedAt == default)
+            {
                 borrow.Book.AvailableCopies += 1;
+                await _bookRepository.UpdateAsync(borrow.Book);
+            }
 
-            _context.Borrows.Remove(borrow);
-            await _context.SaveChangesAsync();
+            await _borrowRepository.DeleteAsync(borrow);
             return true;
         }
     }
