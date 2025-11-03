@@ -19,9 +19,9 @@ namespace Library.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetAll(string? authorName, int pageNubmer = 1)
+        public async Task<IActionResult> GetAll(string? authorName, int pageNumber = 1)
         {
-            var authors = await authorService.GetAll(authorName, pageNubmer);
+            var authors = await authorService.GetAll(authorName, pageNumber);
 
             return Ok(authors);
         }
