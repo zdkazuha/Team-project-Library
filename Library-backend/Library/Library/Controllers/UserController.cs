@@ -44,6 +44,13 @@ namespace WebAPI.Controllers
             return user == null ? NotFound() : Ok(user);
         }
 
+        [HttpGet("user/{username}")]
+        public async Task<IActionResult> GetByUsername(string username)
+        {
+            var user = await _userService.GetByUsernameAsync(username);
+            return user == null ? NotFound() : Ok(user);
+        }
+
         [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, UpdateUserDto dto)

@@ -14,7 +14,7 @@ function Home() {
     }, [page]);
 
     async function fetchBooks() {
-        const api = `https://localhost:7167/api/Book?pageNumber=${page}`;
+        const api = `http://localhost:5162/api/Book?pageNumber=${page}`;
 
         try {
             const response = await fetch(api);
