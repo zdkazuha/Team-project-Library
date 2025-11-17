@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button, Form, Input } from 'antd';
 import image from '../img/Login.jpg';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../contexts/User.context.jsx';
 
 function Register() {
   const [form] = Form.useForm();
   const navigate = useNavigate()
+
+  const { setEmail } = useContext(UserContext);
   
 const onFinish = async (values) => {
   console.log('Success:', values);
@@ -14,7 +17,7 @@ const onFinish = async (values) => {
     return;
 
   try {
-    const response = await fetch('https://localhost:7167/api/User/register', {
+    const response = await fetch('http://localhost:5162/api/User/register', {
         method: 'POST',
         headers: {
             'Content-Type' : 'application/json'
@@ -30,7 +33,9 @@ const onFinish = async (values) => {
     }
 
     const data = await response.json();
-    console.log('Login success:', data);
+    localStorage.setItem('token', data);
+
+    setEmail(values.username);
 
     navigate('/')
   } catch (error) {

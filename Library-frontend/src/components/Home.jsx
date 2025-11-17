@@ -33,7 +33,6 @@ function Home() {
         }
     }
 
-
     function NextPage() {
         setPage(prev => prev + 1);
     }

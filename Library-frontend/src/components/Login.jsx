@@ -1,18 +1,21 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Button, Form, Input } from 'antd';
 import image from '../img/Login.jpg';
 import Password from 'antd/es/input/Password';
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../contexts/User.context.jsx';
 
 function Login() {
   const [form] = Form.useForm();
   const navigate = useNavigate()
 
+  const { setEmail } = useContext(UserContext);
+
 const onFinish = async (values) => {
   console.log('Success:', values);
 
   try {
-    const response = await fetch('https://localhost:7167/api/User/login', {
+    const response = await fetch('http://localhost:5162/api/User/login', {
         method: 'POST',
         headers: {
             'Content-Type' : 'application/json'
@@ -28,7 +31,9 @@ const onFinish = async (values) => {
     }
 
     const data = await response.json();
-    console.log('Login success:', data);
+    localStorage.setItem('token', data);
+
+    setEmail(values.username);
 
     navigate('/')
 
