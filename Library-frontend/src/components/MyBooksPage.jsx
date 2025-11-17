@@ -7,7 +7,6 @@ import Title from 'antd/es/skeleton/Title';
 
 function MyBooksPage() {
     const [books, setBooks] = useState([]);
-    const [page, setPage] = useState(1);
 
     const { email } = useContext(UserContext);
     useEffect(() => {
@@ -34,37 +33,20 @@ function MyBooksPage() {
         }
     }
 
-    function NextPage() {
-        setPage(prev => prev + 1);
-    }
-
-    function PreviousPage() {
-        if(page === 1)
-            return;
-
-        setPage(prev => prev - 1);
-    }
-
     return (
         <div className="baground" style={{ backgroundImage: `url(${image})` }}>
             <h1 className="welcome">Your books</h1>
 
-        <div className='home-buttons'>
-            <button className='button' onClick={PreviousPage} style={{marginRight: 16}}>Previous Page</button>
-            <button className='button' onClick={NextPage}>Next Page</button>
-        </div>
-
         { 
             books === null || books.length === 0 
             ? <h1 style={{textAlign: 'center', color: 'white', fontSize: "64px", paddingTop: '100px', margin: '0', marginBottom: '0'}}>
-                You have zero books</h1>
+                You not have books</h1>
             : 
             <div className="cards">
                 <Row gutter={[0, 0]}>
                     {books.map(book => (
                         <Col key={book.id} span={4.5}>
                             <BookCard Book={{id: book.bookId, title: book.title, coverImage: book.coverImage}} />
-                            {/* <BookCard Book={book} /> */}
                         </Col>
                     ))}
                 </Row>
