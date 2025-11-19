@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 
 namespace BusinessLogic.Configurations.DTOs.BorrowDto
 {
@@ -12,6 +13,9 @@ namespace BusinessLogic.Configurations.DTOs.BorrowDto
         
         public int BookId { get; set; }
         public string BookTitle { get; set; }
+
+        [JsonPropertyName("coverImage")]
+        public string BookCoverImage { get; set; }
 
         public string UserId { get; set; }
         public string UserName { get; set; }    
