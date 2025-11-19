@@ -17,17 +17,17 @@ namespace WebAPI.Controllers
             _borrowService = borrowService;
         }
 
-        [Authorize]
+        // [Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll(int pageNumber = 1)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var isAdmin = User.IsInRole("Admin");
 
-            var borrows = await _borrowService.GetAllAsync();
+            var borrows = await _borrowService.GetAllAsync(pageNumber);
 
-            if (!isAdmin)
-                borrows = borrows.Where(b => b.UserId == userId);
+            // if (!isAdmin)
+                // borrows = borrows.Where(b => b.UserId == userId);
 
             return Ok(borrows);
         }
@@ -90,12 +90,14 @@ namespace WebAPI.Controllers
         }
 
         // 🔹 Новий ендпоінт: отримання орендованих книг користувача
-        [Authorize]
+        // [Authorize]
         [HttpGet("mybooks")]
-        public async Task<IActionResult> GetMyBooks()
+        public async Task<IActionResult> GetMyBooks(string userName)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var books = await _borrowService.GetUserBorrowsAsync(userId);
+            // var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            // var books = await _borrowService.GetUserBorrowsAsync(userId);
+
+            var books = await _borrowService.GetUserBorrowsAsync(userName);
             return Ok(books);
         }
 

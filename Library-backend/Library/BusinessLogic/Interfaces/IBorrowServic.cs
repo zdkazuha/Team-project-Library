@@ -11,6 +11,6 @@ namespace BusinessLogic.Interfaces
         Task<bool> UpdateAsync(int id, UpdateBorrowDto dto);
         Task<bool> DeleteAsync(int id);
         Task<bool> CheckBookAvailabilityAsync(int bookId);
-        Task<IEnumerable<BorrowDto>> GetUserBorrowsAsync(string userId);
+        Task<IEnumerable<BorrowDto>> GetUserBorrowsAsync(string userName);
     }
 }

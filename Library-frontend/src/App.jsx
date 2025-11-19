@@ -18,6 +18,7 @@ function App() {
             <Route index element={<Home /> } />
             <Route path='book/:id' element={<BookPage /> } />
             <Route path='my_books' element={<MyBooksPage />} />
+            <Route path='my_books/book/:id' element={<BookPage /> } />
             <Route path='rental_history' element={<RentalHistoryPage />} />
             <Route path='register' element={ <Register /> } />
             <Route path='login' element={<Login /> } />

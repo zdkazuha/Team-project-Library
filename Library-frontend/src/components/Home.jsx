@@ -18,6 +18,8 @@ function Home() {
     async function fetchBooks() {
         const searchParam = searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : '';
         const api = `https://localhost:7167/api/Book?pageNumber=${page}${searchParam}`;
+        const api = `http://localhost:5162/api/Book?pageNumber=${page}`;
+
         try {
             const response = await fetch(api);
 
@@ -34,7 +36,6 @@ function Home() {
             setBooks([]); 
         }
     }
-
 
     function NextPage() {
         setPage(prev => prev + 1);

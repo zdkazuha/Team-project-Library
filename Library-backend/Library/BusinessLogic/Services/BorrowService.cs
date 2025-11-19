@@ -3,6 +3,7 @@ using BusinessLogic.Configurations.DTOs.BorrowDto;
 using BusinessLogic.Interfaces;
 using DataAccess.Data.Entities;
 using DataAccess.Repositories;
+using Microsoft.AspNetCore.Identity;
 
 namespace BusinessLogic.Services
 {
@@ -10,12 +11,14 @@ namespace BusinessLogic.Services
     {
         private readonly IRepository<Borrow> _borrowRepository;
         private readonly IRepository<Book> _bookRepository;
+        private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
 
-        public BorrowService(IRepository<Borrow> borrowRepository, IRepository<Book> bookRepository, IMapper mapper)
+        public BorrowService(IRepository<Borrow> borrowRepository, IRepository<Book> bookRepository, UserManager<User> userManager, IMapper mapper)
         {
             _borrowRepository = borrowRepository;
             _bookRepository = bookRepository;
+            _userManager = userManager;
             _mapper = mapper;
         }
 
@@ -134,10 +137,12 @@ namespace BusinessLogic.Services
         }
 
 
-        public async Task<IEnumerable<BorrowDto>> GetUserBorrowsAsync(string userId)
+        public async Task<IEnumerable<BorrowDto>> GetUserBorrowsAsync(string userName)
         {
+            var user = await _userManager.FindByNameAsync(userName);
+
             var borrows = await _borrowRepository.GetAllAsync(
-                filtering: b => b.UserId == userId,
+                filtering: b => b.UserId == user.Id,
                 includes: new[] { nameof(Borrow.Book) }
             );
 

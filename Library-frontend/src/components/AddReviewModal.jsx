@@ -24,7 +24,7 @@ function AddReviewModal({ show, onClose, bookTitle, onReviewAdded }) {
                 return;
             }
 
-            const response = await fetch('https://localhost:7167/api/Review', {
+            const response = await fetch('http://localhost:5162/api/Review', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
