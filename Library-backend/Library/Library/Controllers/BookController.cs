@@ -20,10 +20,15 @@ namespace Library.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] string? title, [FromQuery] string? search, int pageNumber = 1)
         {
-            var searchTerm = !string.IsNullOrWhiteSpace(search) ? search : title;
+            var searchTerm = !string.IsNullOrWhiteSpace(search)
+                ? search
+                : title;
+
             var books = await _bookService.GetAllAsync(searchTerm, pageNumber);
+
             return Ok(books);
         }
+
 
         // GetById
         [HttpGet("{id}")]

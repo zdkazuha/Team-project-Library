@@ -34,8 +34,16 @@ namespace BusinessLogic.Services
                 );
             }
 
+            var books = await _bookRepository.GetAllAsync(
+                pageNumber,
+                pageSize: 10,
+                filters,
+                new[] { "Author", "Genre" }
+            );
+
             return _mapper.Map<IEnumerable<BookDto>>(books);
         }
+
 
         // GetById
         public async Task<BookDto?> GetByIdAsync(int id)
