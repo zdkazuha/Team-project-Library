@@ -18,22 +18,18 @@ function Home() {
     async function fetchBooks() {
         const searchParam = searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : '';
         const api = `https://localhost:7167/api/Book?pageNumber=${page}${searchParam}`;
-        const api = `http://localhost:5162/api/Book?pageNumber=${page}`;
 
         try {
             const response = await fetch(api);
-
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             const data = await response.json();
-            console.log(data);
-            
             setBooks(data);
         } catch (error) {
             console.error("Failed to fetch books:", error);
-            setBooks([]); 
+            setBooks([]);
         }
     }
 
