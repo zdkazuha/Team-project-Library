@@ -1,7 +1,6 @@
 ﻿using BusinessLogic.Interfaces;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
@@ -29,14 +28,9 @@ namespace WebAPI.Controllers
         //Отримати історію оренд поточного користувача
         [AllowAnonymous] //поки без авторизації — для фронту
         [HttpGet]
-        public async Task<IActionResult> GetUserHistory()
+        public async Task<IActionResult> GetUserHistory(string userName)
         {
-            // TODO: коли підключиш логін — розкоментуй:
-            // var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            string userId = "demoUser"; // тимчасово
-
-            var borrows = await _borrowService.GetUserBorrowsAsync(userId);
+            var borrows = await _borrowService.GetUserBorrowsAsync(userName);
 
             //Фільтруємо лише повернені книги
             var returned = borrows.Where(b => b.ReturnedAt != null).ToList();
