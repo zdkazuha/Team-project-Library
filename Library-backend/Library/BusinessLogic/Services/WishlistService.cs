@@ -110,8 +110,10 @@ namespace BusinessLogic.Services
             }
 
             var wishlists = await _wishlistRepository.GetAllAsync(
+                1,
+                10,
                 filtering: w => w.UserId == user.Id,
-                includes: new[] { "Book", "User" }
+                "Book", "User"
             );
 
             return _mapper.Map<IEnumerable<WishlistDto>>(wishlists);
@@ -122,8 +124,10 @@ namespace BusinessLogic.Services
             var filters = PredicateBuilder.New<Wishlist>(true);
 
             var wishlists = await _wishlistRepository.GetAllAsync(
+                1,
+                10,
                 filtering: filters.And(w => w.BookId == bookId && w.User.Email == userName),
-                includes: new[] { "Book", "User" }
+                "Book", "User"
                 );
 
             return wishlists.Any();
