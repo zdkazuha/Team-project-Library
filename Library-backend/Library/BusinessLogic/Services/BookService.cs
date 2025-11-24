@@ -20,22 +20,30 @@ namespace BusinessLogic.Services
         }
 
         // Getall (filtre)
-        public async Task<IEnumerable<BookDto>> GetAllAsync(string? title = null, int pageNumber = 1)
+        public async Task<IEnumerable<BookDto>> GetAllAsync(string? searchTerm = null, int pageNumber = 1)
         {
             var filters = PredicateBuilder.New<Book>(true);
 
-            if (!string.IsNullOrEmpty(title))
-                filters = filters.And(b => b.Title.Contains(title));
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                var normalized = searchTerm.Trim().ToLower();
+                filters = filters.And(b =>
+                    (b.Title != null && b.Title.ToLower().Contains(normalized)) ||
+                    (b.Author != null && b.Author.Name.ToLower().Contains(normalized)) ||
+                    (b.Genre != null && b.Genre.Name.ToLower().Contains(normalized))
+                );
+            }
 
             var books = await _bookRepository.GetAllAsync(
                 pageNumber,
                 pageSize: 10,
                 filters,
-                ["Author", "Genre"]
+                new[] { "Author", "Genre" }
             );
 
             return _mapper.Map<IEnumerable<BookDto>>(books);
         }
+
 
         // GetById
         public async Task<BookDto?> GetByIdAsync(int id)
