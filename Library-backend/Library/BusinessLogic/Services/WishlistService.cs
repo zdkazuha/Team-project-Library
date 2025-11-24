@@ -84,17 +84,21 @@ namespace BusinessLogic.Services
             var filters = PredicateBuilder.New<Wishlist>(true);
 
             var entities = await _wishlistRepository.GetAllAsync(
-                filtering: filters.And(w => w.BookId == bookId && w.User.Email == userName),
-                includes: ["Book", "User"]
-                );
+                1,
+                10,
+                filters.And(w => w.BookId == bookId && w.User.Email == userName),
+                "Book", "User"
+            );
 
-            var entity = entities.FirstOrDefault();
+            if (entities.Count == 0)
+                return false;
 
-            if (entity == null) return false;
+            var entity = entities[0];
 
             await _wishlistRepository.DeleteAsync(entity);
             return true;
         }
+
 
         public async Task<IEnumerable<WishlistDto>> GetByUserWishlistAsync(string userName)
         {
@@ -107,7 +111,7 @@ namespace BusinessLogic.Services
 
             var wishlists = await _wishlistRepository.GetAllAsync(
                 filtering: w => w.UserId == user.Id,
-                includes: ["Book", "User"]
+                includes: new[] { "Book", "User" }
             );
 
             return _mapper.Map<IEnumerable<WishlistDto>>(wishlists);
@@ -119,7 +123,7 @@ namespace BusinessLogic.Services
 
             var wishlists = await _wishlistRepository.GetAllAsync(
                 filtering: filters.And(w => w.BookId == bookId && w.User.Email == userName),
-                includes: ["Book", "User"]
+                includes: new[] { "Book", "User" }
                 );
 
             return wishlists.Any();

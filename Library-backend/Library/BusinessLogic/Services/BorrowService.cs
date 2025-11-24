@@ -4,6 +4,7 @@ using BusinessLogic.Interfaces;
 using DataAccess.Data.Entities;
 using DataAccess.Repositories;
 using Microsoft.AspNetCore.Identity;
+using System.Net;
 
 namespace BusinessLogic.Services
 {
@@ -140,6 +141,9 @@ namespace BusinessLogic.Services
         public async Task<IEnumerable<BorrowDto>> GetUserBorrowsAsync(string userName)
         {
             var user = await _userManager.FindByNameAsync(userName);
+
+            if (user == null)
+                throw new HttpException("User not found.", HttpStatusCode.NotFound);
 
             var borrows = await _borrowRepository.GetAllAsync(
                 filtering: b => b.UserId == user.Id,
