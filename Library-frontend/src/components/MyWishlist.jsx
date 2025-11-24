@@ -3,9 +3,8 @@ import image from '../img/MyBooks.jpg';
 import { UserContext } from '../contexts/User.context';
 import { Col, Row } from 'antd';
 import BookCard from './BookCard';
-import Title from 'antd/es/skeleton/Title';
 
-function MyBooksPage() {
+function MyWishlist() {
     const [books, setBooks] = useState([]);
 
     const { email } = useContext(UserContext);
@@ -17,7 +16,8 @@ function MyBooksPage() {
         if (!email) return;
 
         try {
-        const response = await fetch(`https://localhost:7167/api/Borrow/mybooks?userName=${email}`, {
+        const response = await fetch(`https://localhost:7167/api/Wishlist/mywishlist?userName=${email}`, {
+
             headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
@@ -35,18 +35,18 @@ function MyBooksPage() {
 
     return (
         <div className="baground" style={{ backgroundImage: `url(${image})` }}>
-            <h1 className="welcome">Your books</h1>
+            <h1 className="welcome">Your Wishlist</h1>
 
         { 
             books === null || books.length === 0 
             ? <h1 style={{textAlign: 'center', color: 'white', fontSize: "64px", paddingTop: '100px', margin: '0', marginBottom: '0'}}>
-                You not have books</h1>
+                You not have books in Wislist</h1>
             : 
             <div className="cards">
                 <Row gutter={[0, 0]}>
                     {books.map(book => (
                         <Col key={book.id} span={4.5}>
-                            <BookCard Book={{id: book.bookId, title: book.title, coverImage: book.coverImage}} />
+                            <BookCard Book={{id: book.bookId, title: '', coverImage: book.bookCoverImage}} />
                         </Col>
                     ))}
                 </Row>
@@ -56,4 +56,4 @@ function MyBooksPage() {
     );
 }
 
-export default MyBooksPage;
+export default MyWishlist;

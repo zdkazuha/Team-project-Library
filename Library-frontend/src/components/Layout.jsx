@@ -22,6 +22,11 @@ const items = [
         label: <Link to='rental_history'>Rental History</Link>,
         icon: <AlignLeftOutlined />
     },
+        { 
+        key: 'my_wishlist',
+        label: <Link to='my_wishlist'>My Wishlist</Link>,
+        icon: <BookOutlined />
+    },
     { 
         key: 'my_books',
         label: <Link to='my_books'>My Books</Link>,

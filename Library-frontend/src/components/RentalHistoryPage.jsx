@@ -13,7 +13,7 @@ function RentalHistoryPage() {
 
   async function fetchHistory() {
     try {
-      const response = await fetch("http://localhost:5162/api/history", {
+      const response = await fetch("https://localhost:7167/api/history", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BusinessLogic.Configurations.DTOs.WishlistDto;
+﻿using BusinessLogic.Configurations.DTOs.WishlistDto;
 
 namespace BusinessLogic.Interfaces
 {
@@ -12,7 +7,11 @@ namespace BusinessLogic.Interfaces
         Task<IEnumerable<WishlistDto>> GetAllAsync(int pageNumber);
         Task<WishlistDto?> GetByIdAsync(int id);
         Task<WishlistDto> CreateAsync(CreateWishlistDto dto);
+        Task<WishlistDto> CreateAsync(int bookId, string userName);
         Task<WishlistDto?> UpdateAsync(int id, UpdateWishlistDto dto);
         Task<bool> DeleteAsync(int id);
+        Task<bool> DeleteAsync(int bookId, string userName);
+        Task<IEnumerable<WishlistDto>> GetByUserWishlistAsync(string userName);
+        Task<bool> isWishlist(int bookId, string userName);
     }
 }
