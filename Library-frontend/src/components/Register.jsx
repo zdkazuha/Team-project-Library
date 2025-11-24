@@ -17,7 +17,7 @@ const onFinish = async (values) => {
     return;
 
   try {
-    const response = await fetch('http://localhost:5162/api/User/register', {
+    const response = await fetch('https://localhost:7167/api/User/register', {
         method: 'POST',
         headers: {
             'Content-Type' : 'application/json'
