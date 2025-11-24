@@ -7,6 +7,7 @@ import MyBooksPage from './components/MyBooksPage'
 import RentalHistoryPage from './components/RentalHistoryPage'
 import Register from './components/Register'
 import Login from './components/Login'
+import Logout from './components/Logout'
 import MyWishlist from './components/MyWishlist'
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
             <Route path='rental_history' element={<RentalHistoryPage />} />
             <Route path='register' element={ <Register /> } />
             <Route path='login' element={<Login /> } />
+            <Route path='logout' element={<Logout /> } />
           </Route>
         </Routes>
       </BrowserRouter>
