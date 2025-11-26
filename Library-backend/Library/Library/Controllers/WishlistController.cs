@@ -32,12 +32,21 @@ namespace Library.Controllers
             return Ok(wishlist);
         }
 
-        [HttpPost]
+        [HttpPost("Create")]
         public async Task<IActionResult> Create([FromBody] CreateWishlistDto dto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
             var created = await _wishlistService.CreateAsync(dto);
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+        }
+
+        [HttpPost("CreateByUserName")]
+        public async Task<IActionResult> Create(int bookId, string userName)
+        {
+            if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            var created = await _wishlistService.CreateAsync(bookId,userName);
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
@@ -60,5 +69,30 @@ namespace Library.Controllers
 
             return NoContent();
         }
+
+        [HttpDelete("DeleteByUsername")]
+        public async Task<IActionResult> Delete(int bookId, string userName)
+        {
+            var deleted = await _wishlistService.DeleteAsync(bookId, userName);
+            if (!deleted) return NotFound();
+
+            return NoContent();
+        }
+
+        [HttpGet("mywishlist")]
+        public async Task<IActionResult> GetByUserWishlist(string userName)
+        {
+            var wishlists = await _wishlistService.GetByUserWishlistAsync(userName);
+            return Ok(wishlists);
+        }
+
+        [HttpGet("isWishlist/{bookId}")]
+        public async Task<IActionResult> IsWishlist(int bookId, string userName)
+        {
+            var isWishlist = await _wishlistService.isWishlist(bookId, userName);
+            return Ok(isWishlist);
+        }
+
+
     }
 }

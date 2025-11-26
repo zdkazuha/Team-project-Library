@@ -1,16 +1,19 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import image from "../img/BookPage.png"
 import { useParams } from "react-router-dom";
 import AddReviewModal from "./AddReviewModal";
+import { UserContext } from "../contexts/User.context";
 
 function BookPage() {
 
+    const { email, isAuth } = useContext(UserContext);
+    const [showModal, setShowModal] = useState(false);
+    const [isWishlist, setWishlist] = useState();
+    const [review, setReview] = useState([]);
+    const [author, setAuthor] = useState();
+    const [genre, setGenre] = useState();
+    const [book, setBook] = useState();
     const { id } = useParams();
-    const [book, setBook] = useState()
-    const [review, setReview] = useState([])
-    const [author, setAuthor] = useState()
-    const [genre, setGenre] = useState()
-    const [showModal, setShowModal] = useState(false)
     
     useEffect(() => {
         fetchData(`https://localhost:7167/api/Book/${id}`, setBook);
@@ -21,6 +24,7 @@ function BookPage() {
         fetchData(`https://localhost:7167/api/Genre/${book.genreId}`, setGenre);
         fetchData(`https://localhost:7167/api/Author/${book.authorId}`, setAuthor);
         fetchData(`https://localhost:7167/api/Review?bookTitle=${encodeURIComponent(book.title)}&pageNumber=1`, setReview);
+        fetchData(`https://localhost:7167/api/Wishlist/isWishlist/1?userName=${email}`, setWishlist);
     }, [book]);
 
 
@@ -41,6 +45,48 @@ function BookPage() {
         }
     };
 
+    const AddOrRemoveWishlist = () => {
+      if(!book) return;
+
+      if(!isAuth()) {
+        alert('You need to be logged in to add books to your wishlist.');
+        return;
+      }
+
+      if(!isWishlist) {
+        AddToWishlist();
+      }
+      else {
+        RemoveFromWishlist();
+      }
+    }
+
+    function AddToWishlist() {
+          fetch(`https://localhost:7167/api/Wishlist/CreateByUserName?bookId=${book.id}&userName=${email}`, {
+          method: 'POST'
+        })
+
+        .then(response => response.json())
+        .then(data => {
+          console.log('Success:', data);
+          alert('Book added to wishlist!');
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          alert('Failed to add book to wishlist.');
+        });
+
+        setWishlist(true);
+    }
+
+    function RemoveFromWishlist() {
+          fetch(`https://localhost:7167/api/Wishlist/DeleteByUsername?bookId=${book.id}&userName=${email}`, {
+          method: 'DELETE'
+        })
+
+        setWishlist(false);
+    }
+
     return (
     <div className="book-page baground" style={{ backgroundImage: `url(${image})` }}>
         {book ? (
@@ -51,6 +97,40 @@ function BookPage() {
                 alt={book.title}
                 className="book-info-image"
             />
+
+            <button
+            onClick={AddOrRemoveWishlist}
+            style={{
+            padding: '12px 24px',
+            marginRight: 20,
+            backgroundColor: '#232d30ff',
+            color: 'white',
+            border: 'none',
+            borderRadius: 25,
+            fontSize: 16,
+            fontWeight: 'bold',
+            cursor: 'pointer',
+            boxShadow: '0 4px 15px rgba(0, 198, 251, 0.4)',
+            transition: 'all 0.3s ease',
+            position: 'absolute',
+            bottom: 150,
+            left: 230,
+            width: 220,
+          }}
+          onMouseOver={(e) => {
+            e.target.style.backgroundColor = '#0099cc';
+            e.target.style.transform = 'scale(1.05)';
+          }}
+          onMouseOut={(e) => {
+            e.target.style.backgroundColor = '#00c6fb';
+            e.target.style.transform = 'scale(1)';
+          }}
+            >
+              {
+              isWishlist == false ? 'Add to wishlist' : 'Remove from wishlist'
+              }
+              </button>
+
             </div>
 
             <div className="book-info" style={{height: 550, width: 700, marginRight: 50}}>
@@ -112,6 +192,7 @@ function BookPage() {
     onClick={() => setShowModal(true)}
     style={{
       padding: '12px 24px',
+      marginRight: 20,
       backgroundColor: '#00c6fb',
       color: 'white',
       border: 'none',
@@ -134,8 +215,6 @@ function BookPage() {
     Add Review
   </button>
 </div>
-
-
             <AddReviewModal 
                 show={showModal}
                 onClose={() => setShowModal(false)}

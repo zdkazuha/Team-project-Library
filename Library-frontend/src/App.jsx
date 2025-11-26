@@ -8,7 +8,8 @@ import RentalHistoryPage from './components/RentalHistoryPage'
 import Register from './components/Register'
 import Login from './components/Login'
 import ToastContainer from './components/ToastContainer'
-
+import Logout from './components/Logout'
+import MyWishlist from './components/MyWishlist'
 
 function App() {
   return (
@@ -21,9 +22,12 @@ function App() {
             <Route path='book/:id' element={<BookPage /> } />
             <Route path='my_books' element={<MyBooksPage />} />
             <Route path='my_books/book/:id' element={<BookPage /> } />
+            <Route path='my_wishlist' element={<MyWishlist />} />
+            <Route path='my_wishlist/book/:id' element={<BookPage /> } />
             <Route path='rental_history' element={<RentalHistoryPage />} />
             <Route path='register' element={ <Register /> } />
             <Route path='login' element={<Login /> } />
+            <Route path='logout' element={<Logout /> } />
           </Route>
         </Routes>
       </BrowserRouter>

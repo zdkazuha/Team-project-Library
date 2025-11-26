@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import image from "../img/BookPage.png";
+import { UserContext } from "../contexts/User.context";
 
 function RentalHistoryPage() {
+  const {email} = useContext(UserContext);
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -13,7 +15,7 @@ function RentalHistoryPage() {
 
   async function fetchHistory() {
     try {
-      const response = await fetch("http://localhost:5162/api/history", {
+      const response = await fetch(`https://localhost:7167/api/History?userName=${email}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -23,8 +25,10 @@ function RentalHistoryPage() {
         const data = await response.json();
         setHistory(data);
       }
+
     } catch (error) {
       console.error("Error fetching history:", error);
+      
     } finally {
       setLoading(false);
     }

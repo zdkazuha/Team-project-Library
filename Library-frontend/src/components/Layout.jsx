@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import { Link, Outlet } from 'react-router-dom';
 import {
@@ -9,6 +9,7 @@ import {
     UserOutlined,
     PlusOutlined
 } from '@ant-design/icons';
+import { UserContext } from '../contexts/User.context';
 const { Header, Content, Footer } = Layout;
 
 const items = [
@@ -22,6 +23,11 @@ const items = [
         key: 'rental_history',
         label: <Link to='rental_history'>Rental History</Link>,
         icon: <AlignLeftOutlined />
+    },
+        { 
+        key: 'my_wishlist',
+        label: <Link to='my_wishlist'>My Wishlist</Link>,
+        icon: <BookOutlined />
     },
     { 
         key: 'my_books',
@@ -48,10 +54,20 @@ const itemsLR= [
   },
 ]
 
+const itemsL= [
+  {
+    key: 'logout',
+    label: <Link to='logout'>Logout</Link>,
+    icon: <UserAddOutlined />
+  }
+]
+
 const AppLayout = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  const { email } = useContext(UserContext);
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -80,7 +96,7 @@ const AppLayout = () => {
           theme="dark"
           mode="horizontal"
           defaultSelectedKeys={['1']}
-          items={itemsLR}
+          items={email != null ? itemsL : itemsLR}
           style={{ flex: 1, minWidth: 0, background: 'transparent', color: 'black', justifyContent: 'flex-end' }}
         />
       </Header>

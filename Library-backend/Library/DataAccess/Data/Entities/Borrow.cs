@@ -13,7 +13,7 @@ namespace DataAccess.Data.Entities
         public string UserId { get; set; }
         public DateTime BorrowedAt { get; set; }
         public DateTime DueDate { get; set; }
-        public DateTime ReturnedAt { get; set; }
+        public DateTime? ReturnedAt { get; set; }
 
         // navigation properties
         public Book Book { get; set; }
