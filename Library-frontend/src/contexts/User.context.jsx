@@ -24,7 +24,7 @@ export const UserProvider = ({ children }) => {
 
     const clear = () => { setEmail(null); };
     const isAuth = () => email !== null;
-    const isAdmin = () => email === "Admin";
+    const isAdmin = () => email === "admin@library.com";
 
     return (
         <UserContext.Provider value={{ email, setEmail, clear, isAuth, isAdmin }}>

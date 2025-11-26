@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using DataAccess.Data.Entities;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 
 namespace DataAccess.Data.Seeding
 {
@@ -10,19 +11,20 @@ namespace DataAccess.Data.Seeding
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<User>>();
+            var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
             string[] roles = { "Admin", "User" };
 
-            //Створення ролей
+            // Створення ролей
             foreach (var role in roles)
             {
                 if (!await roleManager.RoleExistsAsync(role))
                     await roleManager.CreateAsync(new IdentityRole(role));
             }
 
-            // Отримання даних адміністратора з середовища
-            var adminEmail = Environment.GetEnvironmentVariable("ADMIN_EMAIL");
-            var adminPassword = Environment.GetEnvironmentVariable("ADMIN_PASSWORD");
+            // Отримання даних адміністратора з секретів
+            var adminEmail = configuration["ADMIN_EMAIL"];
+            var adminPassword = configuration["ADMIN_PASSWORD"];
 
             if (!string.IsNullOrWhiteSpace(adminEmail) && !string.IsNullOrWhiteSpace(adminPassword))
             {

@@ -6,7 +6,8 @@ import {
     AlignLeftOutlined,
     BookOutlined,
     UserAddOutlined,
-    UserOutlined
+    UserOutlined,
+    PlusOutlined
 } from '@ant-design/icons';
 import { UserContext } from '../contexts/User.context';
 const { Header, Content, Footer } = Layout;
@@ -32,7 +33,12 @@ const items = [
         key: 'my_books',
         label: <Link to='my_books'>My Books</Link>,
         icon: <BookOutlined />
-    }
+     },
+    // ...(isAdmin ? [{
+    //     key: 'add_book',
+    //     label: <Link to='add_book'>Add Book</Link>,
+    //     icon: <PlusOutlined />
+    // }] : [])
 ];
 
 const itemsLR= [

@@ -3,6 +3,7 @@ import { Button, Form, Input } from 'antd';
 import image from '../img/Login.jpg';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../contexts/User.context.jsx';
+import { toast } from './ToastContainer';
 
 function Login() {
   const [form] = Form.useForm();
@@ -26,7 +27,11 @@ const onFinish = async (values) => {
     })
 
     if(!response.ok) {
-        throw new Error('Login failed');
+      if (response.ok) {
+        toast.success('✅ Registration successful!');
+      } else {
+        toast.error('❌ Registration failed.');
+  }
     }
 
     const data = await response.json();
@@ -38,7 +43,7 @@ const onFinish = async (values) => {
 
   } catch (error) {
     console.error('Error:', error);
-    alert('Login failed');
+    toast.error('❌ Login failed.');
   }
 
 };
