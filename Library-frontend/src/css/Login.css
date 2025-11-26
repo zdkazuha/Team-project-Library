@@ -1,0 +1,71 @@
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.login-form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px;
+    height: 450px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.6);
+    backdrop-filter: blur(6px);
+    background: rgba(0, 0, 0, 0.5);
+    margin: 0 auto;
+}
+
+.welcome-text {
+    padding-bottom: 50px;
+    color: rgba(255, 255, 255, 1);
+    font-weight: bold;
+    font-size: 45px;
+    text-align: center;
+}
+
+.form-antd {
+    width: 100%;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.form-input {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+}
+
+.login-submit-btn {
+    width: 150px;
+    height: 45px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 16px;
+    color: white;
+    background: linear-gradient(90deg, #00c6fb 0%, #005bea 100%);
+    border: none;
+    box-shadow: 0 6px 15px rgba(0, 86, 234, 0.4);
+    transition: all 0.3s ease;
+}
+
+.login-submit-btn:hover {
+    background: linear-gradient(90deg, #0078ff 0%, #00e1ff 100%);
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 20px rgba(0, 86, 234, 0.5);
+}
+
+.login-submit-btn:active {
+    transform: translateY(0) scale(1);
+    box-shadow: 0 6px 12px rgba(0, 86, 234, 0.4);
+}

@@ -19,7 +19,6 @@ namespace BusinessLogic.Services
             _mapper = mapper;
         }
 
-        // Getall (filtre)
         public async Task<IEnumerable<BookDto>> GetAllAsync(string? searchTerm = null, int pageNumber = 1)
         {
             var filters = PredicateBuilder.New<Book>(true);
@@ -44,23 +43,18 @@ namespace BusinessLogic.Services
             return _mapper.Map<IEnumerable<BookDto>>(books);
         }
 
-
-        // GetById
         public async Task<BookDto?> GetByIdAsync(int id)
         {
             var book = await _bookRepository.GetByIdAsync(id, "Author", "Genre");
             return book == null ? null : _mapper.Map<BookDto>(book);
         }
 
-        // Create
         public async Task<BookDto> CreateAsync(CreateBookDto dto)
         {
             var book = _mapper.Map<Book>(dto);
             await _bookRepository.AddAsync(book);
             return _mapper.Map<BookDto>(book);
         }
-
-        // Update
 
         public async Task<BookDto?> UpdateAsync(int id, UpdateBookDto dto)
         {
@@ -73,7 +67,6 @@ namespace BusinessLogic.Services
             return _mapper.Map<BookDto>(book);
         }
 
-        // Delete
         public async Task<bool> DeleteAsync(int id)
         {
             var book = await _bookRepository.GetByIdAsync(id);

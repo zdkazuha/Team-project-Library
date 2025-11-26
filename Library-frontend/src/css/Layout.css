@@ -1,0 +1,46 @@
+.layout {
+  min-height: 100vh;
+}
+
+.header {
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background: transparent;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.header h2 {
+  color: white;
+  margin-right: 24px;
+}
+
+.menu-main {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  color: black;
+}
+
+.menu-auth {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  color: black;
+  justify-content: flex-end;
+}
+
+.content-wrapper {
+  min-height: calc(100vh - 160px);
+  width: 100%;
+}
+
+.footer {
+  text-align: center;
+  background: #001529;
+  color: white;
+  padding: 16px 0;
+}

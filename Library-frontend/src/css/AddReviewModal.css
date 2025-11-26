@@ -1,0 +1,106 @@
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-container {
+    background-color: rgba(20, 20, 40, 0.95);
+    padding: 30px;
+    border-radius: 20px;
+    width: 500px;
+    border: 1px solid rgba(0, 198, 251, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 198, 251, 0.2);
+}
+
+.modal-title {
+    color: white;
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.modal-field {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-field label {
+    color: white;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+.modal-input,
+.modal-textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 198, 251, 0.5);
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.modal-textarea {
+    min-height: 120px;
+}
+
+.modal-error {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: rgba(255, 0, 0, 0.2);
+    border: 1px solid rgba(255, 0, 0, 0.5);
+    border-radius: 10px;
+    color: #ff6b6b;
+    text-align: center;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.modal-submit {
+    padding: 12px 30px;
+    background-color: #00c6fb;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-submit:hover {
+    background-color: #0099cc;
+}
+
+.modal-cancel {
+    padding: 12px 30px;
+    background-color: transparent;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-cancel:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}

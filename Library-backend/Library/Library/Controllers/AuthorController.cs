@@ -59,6 +59,5 @@ namespace Library.Controllers
             await authorService.DeleteAsync(id);
             return NoContent();
         }
-
     }
 }

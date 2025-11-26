@@ -7,7 +7,7 @@ namespace BusinessLogic.Interfaces
     {
         Task<IEnumerable<UserDto>> GetAllAsync();
         Task<UserDto?> GetByIdAsync(string id);
-        Task<UserDto?> GetByUsernameAsync(string username);
+        Task<UserDto?> GetUserByEmailAsync(string username);
         Task<UserDto> CreateAsync(CreateUserDto dto);
         Task<bool> UpdateAsync(string id, UpdateUserDto dto);
         Task<bool> DeleteAsync(string id);

@@ -25,7 +25,6 @@ namespace Library.Controllers
         }
 
         [HttpGet("{id}")]
-
         public async Task<IActionResult> GetById(int id)
         {
             var review = await reviewService.GetByIdAsync(id);

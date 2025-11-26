@@ -19,6 +19,7 @@ namespace BusinessLogic
         {
             this.StatusCode = statusCode;
         }
+
         public HttpException(string message, HttpStatusCode code, Exception inner)
             : base(message, inner)
         {

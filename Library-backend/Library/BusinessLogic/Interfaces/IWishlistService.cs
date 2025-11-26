@@ -11,7 +11,7 @@ namespace BusinessLogic.Interfaces
         Task<WishlistDto?> UpdateAsync(int id, UpdateWishlistDto dto);
         Task<bool> DeleteAsync(int id);
         Task<bool> DeleteAsync(int bookId, string userName);
-        Task<IEnumerable<WishlistDto>> GetByUserWishlistAsync(string userName);
-        Task<bool> isWishlist(int bookId, string userName);
+        Task<IEnumerable<WishlistDto>> GetByUserWishlistAsync(string userId);
+        Task<bool> isWishlist(int bookId, string userId);
     }
 }

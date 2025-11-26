@@ -22,15 +22,9 @@ namespace DataAccess.Repositories
             int pageSize = 10,
             Expression<Func<T, bool>>? filtering = null,
             params string[]? includes
-            )
+        )
         {
             var query = set.AsQueryable();
-
-            if (filtering != null)
-                query = query.Where(filtering);
-
-            if (pageNumber != null)
-                query = await query.PaginateAsync(pageNumber.Value, pageSize);
 
             if (includes != null && includes.Length > 0)
             {
@@ -38,8 +32,15 @@ namespace DataAccess.Repositories
                     query = query.Include(include);
             }
 
+            if (filtering != null)
+                query = query.Where(filtering);
+
+            if (pageNumber != null)
+                query = query.Skip((pageNumber.Value - 1) * pageSize).Take(pageSize);
+
             return await query.ToListAsync();
         }
+
 
         public async Task<T?> GetByIdAsync(int id, params string[]? includes)
         {

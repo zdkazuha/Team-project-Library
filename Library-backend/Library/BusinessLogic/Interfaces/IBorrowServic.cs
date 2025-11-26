@@ -7,10 +7,12 @@ namespace BusinessLogic.Interfaces
         Task<IEnumerable<BorrowDto>> GetAllAsync(int pageNumber = 1);
         Task<BorrowDto?> GetByIdAsync(int id);
         Task<BorrowDto> CreateAsync(CreateBorrowDto dto);
-        Task<bool> ReturnBookAsync(int id);
+        Task<bool> ReturnBookAsync(int bookId, string userId);
         Task<bool> UpdateAsync(int id, UpdateBorrowDto dto);
         Task<bool> DeleteAsync(int id);
         Task<bool> CheckBookAvailabilityAsync(int bookId);
-        Task<IEnumerable<BorrowDto>> GetUserBorrowsAsync(string userName);
+        Task<IEnumerable<BorrowDto>> GetUserBorrowsAsync(string userId);
+        Task<IEnumerable<BorrowDto>> GetUserBorrowsReturnedAsync(string userId);
+        Task<bool> isBorrow(int bookId, string userId);
     }
 }

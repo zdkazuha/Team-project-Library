@@ -20,6 +20,34 @@ namespace BusinessLogic.Services
             this.mapper = mapper;
         }
 
+        public async Task<IEnumerable<GenreDto>> GetAllAsync(string? genreName, int pageNumber = 1)
+        {
+            var filters = PredicateBuilder.New<Genre>(true);
+
+            if (genreName != null)
+                filters = filters.And(x => x.Name.Contains(genreName));
+
+            var genres = await repo.GetAllAsync(pageNumber, 10, filters);
+
+            if (genres == null)
+                throw new HttpException("Genres not found.", HttpStatusCode.NotFound);
+
+            return mapper.Map<IEnumerable<GenreDto>>(genres);
+        }
+
+        public async Task<GenreDto?> GetByIdAsync(int id)
+        {
+            if (id <= 0)
+                throw new HttpException("Id can`t be negative or zero.", HttpStatusCode.BadRequest);
+
+            var genre = await repo.GetByIdAsync(id);
+
+            if (genre == null)
+                throw new HttpException("Genre not found.", HttpStatusCode.NotFound);
+
+            return mapper.Map<GenreDto>(genre);
+        }
+
         public async Task<GenreDto> CreateAsync(CreateGenreDto dto)
         {
             var genre = mapper.Map<Genre>(dto);
@@ -27,6 +55,21 @@ namespace BusinessLogic.Services
             await repo.AddAsync(genre);
 
             return mapper.Map<GenreDto>(genre);
+        }
+
+        public async Task UpdateAsync(int id, UpdateGenreDto dto)
+        {
+            if (id <= 0)
+                throw new HttpException("Id can`t be negative or zero.", HttpStatusCode.BadRequest);
+
+            var genre = await repo.GetByIdAsync(id);
+
+            if (genre == null)
+                throw new HttpException("Genre not found.", HttpStatusCode.NotFound);
+
+            mapper.Map(dto, genre);
+
+            await repo.UpdateAsync(genre);
         }
 
         public async Task DeleteAsync(int id)
@@ -40,49 +83,6 @@ namespace BusinessLogic.Services
                 throw new HttpException("Genre not found.", HttpStatusCode.NotFound);
 
             await repo.DeleteAsync(id);
-        }
-
-        public async Task<IEnumerable<GenreDto>> GetAllAsync(string? genreName, int pageNumber = 1)
-        {
-            var filters = PredicateBuilder.New<Genre>(true);
-
-            if (genreName != null)
-                filters = filters.And(x => x.Name.Contains(genreName));
-
-            var genres = await repo.GetAllAsync(pageNumber, 10, filters);
-
-            if(genres == null)
-                throw new HttpException("Genres not found.", HttpStatusCode.NotFound);
-
-            return mapper.Map<IEnumerable<GenreDto>>(genres);
-        }
-
-        public async Task<GenreDto?> GetByIdAsync(int id)
-        {
-            if(id <= 0)
-                throw new HttpException("Id can`t be negative or zero.", HttpStatusCode.BadRequest);
-
-            var genre = await repo.GetByIdAsync(id);
-
-            if (genre == null)
-                throw new HttpException("Genre not found.", HttpStatusCode.NotFound);
-
-            return mapper.Map<GenreDto>(genre);
-        }
-
-        public async Task UpdateAsync(int id, UpdateGenreDto dto)
-        {
-            if(id <= 0)
-                throw new HttpException("Id can`t be negative or zero.", HttpStatusCode.BadRequest);
-
-            var genre = await repo.GetByIdAsync(id);
-
-            if(genre == null)
-                throw new HttpException("Genre not found.", HttpStatusCode.NotFound);
-
-            mapper.Map(dto, genre);
-
-            await repo.UpdateAsync(genre);
         }
     }
 }
