@@ -7,12 +7,14 @@ import MyBooksPage from './components/MyBooksPage'
 import RentalHistoryPage from './components/RentalHistoryPage'
 import Register from './components/Register'
 import Login from './components/Login'
+import ToastContainer from './components/ToastContainer'
 
 
 function App() {
   return (
     <>
       <BrowserRouter>
+        <ToastContainer />  
         <Routes>
           <Route path='/' element={<AppLayout />}>
             <Route index element={<Home /> } />

@@ -13,14 +13,14 @@ function BookPage() {
     const [showModal, setShowModal] = useState(false)
     
     useEffect(() => {
-        fetchData(`http://localhost:5162/api/Book/${id}`, setBook);
+        fetchData(`https://localhost:7167/api/Book/${id}`, setBook);
     }, [id]);
 
     useEffect(() => {
         if (!book) return;
-        fetchData(`http://localhost:5162/api/Genre/${book.genreId}`, setGenre);
-        fetchData(`http://localhost:5162/api/Author/${book.authorId}`, setAuthor);
-        fetchData(`http://localhost:5162/api/Review?bookTitle=${encodeURIComponent(book.title)}&pageNumber=1`, setReview);
+        fetchData(`https://localhost:7167/api/Genre/${book.genreId}`, setGenre);
+        fetchData(`https://localhost:7167/api/Author/${book.authorId}`, setAuthor);
+        fetchData(`https://localhost:7167/api/Review?bookTitle=${encodeURIComponent(book.title)}&pageNumber=1`, setReview);
     }, [book]);
 
 
@@ -37,7 +37,7 @@ function BookPage() {
 
     const handleReviewAdded = () => {
         if (book) {
-            fetchData(`http://localhost:5162/api/Review?bookTitle=${encodeURIComponent(book.title)}&pageNumber=1`, setReview);
+            fetchData(`https://localhost:7167/api/Review?bookTitle=${encodeURIComponent(book.title)}&pageNumber=1`, setReview);
         }
     };
 

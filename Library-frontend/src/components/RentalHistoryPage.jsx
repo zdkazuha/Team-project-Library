@@ -76,7 +76,7 @@ function RentalHistoryPage() {
           alignItems: "center",
         }}
       >
-        <p style={{ color: "white", fontSize: 24 }}>Завантаження історії...</p>
+        <p style={{ color: "white", fontSize: 24 }}>Loading history...</p>
       </div>
     );
   }
@@ -101,10 +101,10 @@ function RentalHistoryPage() {
               marginBottom: 10,
             }}
           >
-            📚 Історія Оренд
+            📚 Rental History
           </h1>
           <p style={{ color: "#ffcc80", fontSize: 18 }}>
-            Ваші повернені книги
+            Your returned books
           </p>
         </div>
 
@@ -130,7 +130,7 @@ function RentalHistoryPage() {
             {/* Search */}
             <input
               type="text"
-              placeholder="🔍 Пошук за назвою книги..."
+              placeholder="🔍 Search by book title..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               style={{
@@ -171,7 +171,7 @@ function RentalHistoryPage() {
                 transition: "all 0.3s",
               }}
             >
-              Всі ({history.length})
+              All ({history.length})
             </button>
 
             <button
@@ -194,7 +194,7 @@ function RentalHistoryPage() {
                 transition: "all 0.3s",
               }}
             >
-              Вчасно
+              In Time
             </button>
 
             <button
@@ -217,7 +217,7 @@ function RentalHistoryPage() {
                 transition: "all 0.3s",
               }}
             >
-              Прострочені
+              Overdue
             </button>
           </div>
         </div>
@@ -236,12 +236,12 @@ function RentalHistoryPage() {
           >
             <p style={{ fontSize: 48, marginBottom: 20 }}>📚</p>
             <h3 style={{ color: "white", fontSize: 24, marginBottom: 10 }}>
-              Історія порожня
+              History is empty
             </h3>
             <p style={{ color: "#ffcc80", fontSize: 16 }}>
               {searchTerm
-                ? "Немає результатів за вашим пошуком"
-                : "Ви ще не повернули жодної книги"}
+                ? "Nothing was found for your query."
+                : "You have not returned any books yet."}
             </p>
           </div>
         ) : (
@@ -309,7 +309,7 @@ function RentalHistoryPage() {
                               marginBottom: 4,
                             }}
                           >
-                            📅 Взято
+                            📅 Borrowed
                           </p>
                           <p
                             style={{
@@ -331,7 +331,7 @@ function RentalHistoryPage() {
                               marginBottom: 4,
                             }}
                           >
-                            ⏰ Термін
+                            ⏰ Due Date
                           </p>
                           <p
                             style={{
@@ -353,7 +353,7 @@ function RentalHistoryPage() {
                               marginBottom: 4,
                             }}
                           >
-                            {wasLate ? "❌" : "✅"} Повернуто
+                            {wasLate ? "❌" : "✅"} Returned
                           </p>
                           <p
                             style={{
@@ -392,7 +392,7 @@ function RentalHistoryPage() {
                               marginBottom: 4,
                             }}
                           >
-                            Прострочено
+                            Overdue
                           </p>
                           <p
                             style={{
@@ -401,7 +401,7 @@ function RentalHistoryPage() {
                               fontWeight: "bold",
                             }}
                           >
-                            {daysLate} дн.
+                            {daysLate} days
                           </p>
                         </>
                       ) : (
@@ -412,7 +412,7 @@ function RentalHistoryPage() {
                             fontWeight: "bold",
                           }}
                         >
-                          ✓ Вчасно
+                          ✓ In Time
                         </p>
                       )}
                     </div>
@@ -461,7 +461,7 @@ function RentalHistoryPage() {
                 {history.length}
               </p>
               <p style={{ color: "#ffcc80", fontSize: 14 }}>
-                Всього повернуто
+                Total Returned
               </p>
             </div>
 
@@ -487,7 +487,7 @@ function RentalHistoryPage() {
                 }
               </p>
               <p style={{ color: "#ffcc80", fontSize: 14 }}>
-                Повернуто вчасно
+                Return on Time
               </p>
             </div>
 
@@ -511,7 +511,7 @@ function RentalHistoryPage() {
                     .length
                 }
               </p>
-              <p style={{ color: "#ffcc80", fontSize: 14 }}>Прострочено</p>
+              <p style={{ color: "#ffcc80", fontSize: 14 }}>Overdue</p>
             </div>
           </div>
         )}

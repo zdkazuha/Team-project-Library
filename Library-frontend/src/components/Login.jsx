@@ -4,6 +4,7 @@ import image from '../img/Login.jpg';
 import Password from 'antd/es/input/Password';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../contexts/User.context.jsx';
+import { toast } from './ToastContainer';
 
 function Login() {
   const [form] = Form.useForm();
@@ -15,7 +16,7 @@ const onFinish = async (values) => {
   console.log('Success:', values);
 
   try {
-    const response = await fetch('http://localhost:5162/api/User/login', {
+    const response = await fetch('https://localhost:7167/api/User/login', {
         method: 'POST',
         headers: {
             'Content-Type' : 'application/json'
@@ -27,7 +28,11 @@ const onFinish = async (values) => {
     })
 
     if(!response.ok) {
-        throw new Error('Login failed');
+      if (response.ok) {
+        toast.success('✅ Registration successful!');
+      } else {
+        toast.error('❌ Registration failed.');
+  }
     }
 
     const data = await response.json();
@@ -39,7 +44,7 @@ const onFinish = async (values) => {
 
   } catch (error) {
     console.error('Error:', error);
-    alert('Login failed');
+    toast.error('❌ Login failed.');
   }
 
 };
