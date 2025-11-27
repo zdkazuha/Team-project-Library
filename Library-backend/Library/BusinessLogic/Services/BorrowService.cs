@@ -80,13 +80,13 @@ namespace BusinessLogic.Services
                 pageNumber: 1,
                 pageSize: 1,
                 filtering: b => b.BookId == bookId && b.UserId == userId && b.ReturnedAt == null,
-                includes: new[] { nameof(Borrow.Book) }
+                includes: nameof(Borrow.Book)
             );
 
-            if (!borrows.Any())
+            if (borrows.Count == 0)
                 return false;
 
-            var borrow = borrows.First();
+            var borrow = borrows[0];
 
             if (borrow.ReturnedAt != null)
                 throw new Exception("Book already returned.");

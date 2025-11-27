@@ -4,6 +4,7 @@ import image from '../img/Login.jpg';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../contexts/User.context.jsx';
 import '../css/Login.css';
+import { toast } from './ToastContainer';
 
 function Login() {
   const [form] = Form.useForm();
@@ -24,13 +25,28 @@ function Login() {
           })
       });
 
-      if(!response.ok) throw new Error('Login failed');
+    if(!response.ok) {
+      if (response.ok) {
+        toast.success('✅ Registration successful!');
+      } else {
+        toast.error('❌ Registration failed.');
+  }
+    }
+
+    const data = await response.json();
+    localStorage.setItem('token', data);
+
+    setEmail(values.username);
 
       const data = await response.json();
       localStorage.setItem('token', data.token);
 
       setEmail(values.username);
       getIdByEmail(values.username);
+  } catch (error) {
+    console.error('Error:', error);
+    toast.error('❌ Login failed.');
+  }
 
       navigate('/');
     } catch (error) {

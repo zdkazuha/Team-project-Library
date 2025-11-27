@@ -6,7 +6,8 @@ import {
     AlignLeftOutlined,
     BookOutlined,
     UserAddOutlined,
-    UserOutlined
+    UserOutlined,
+    PlusOutlined
 } from '@ant-design/icons';
 import { UserContext } from '../contexts/User.context';
 import '../css/Layout.css';
@@ -17,7 +18,12 @@ const items = [
     { key: '/', label: <Link to="/">Home</Link>, icon: <HomeFilled /> },
     { key: 'rental_history', label: <Link to='rental_history'>Rental History</Link>, icon: <AlignLeftOutlined /> },
     { key: 'my_wishlist', label: <Link to='my_wishlist'>My Wishlist</Link>, icon: <BookOutlined /> },
-    { key: 'my_books', label: <Link to='my_books'>My Books</Link>, icon: <BookOutlined /> }
+    { key: 'my_books', label: <Link to='my_books'>My Books</Link>, icon: <BookOutlined /> },
+    // ...(isAdmin ? [{
+    //     key: 'add_book',
+    //     label: <Link to='add_book'>Add Book</Link>,
+    //     icon: <PlusOutlined />
+    // }] : [])
 ];
 
 const itemsLR = [

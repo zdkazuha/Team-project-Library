@@ -31,7 +31,7 @@ namespace WebAPI.Controllers
             return Ok(new { token });
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public async Task<IActionResult> GetAll() =>
             Ok(await _userService.GetAllAsync());
