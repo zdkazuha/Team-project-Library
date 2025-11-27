@@ -30,8 +30,6 @@ namespace WebAPI.Controllers
         {
             var borrows = await _borrowService.GetUserBorrowsReturnedAsync(userId);
 
-            //var returned = borrows.Where(b => b.ReturnedAt != null).ToList();
-
             return Ok(borrows);
         }
     }

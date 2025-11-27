@@ -13,7 +13,6 @@ namespace BusinessLogic.Services
     public class WishlistService : IWishlistService
     {
         private readonly IRepository<Wishlist> _wishlistRepository;
-        private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
 
         public WishlistService(IRepository<Wishlist> wishlistRepository, UserManager<User> userManager, IMapper mapper)
@@ -100,7 +99,7 @@ namespace BusinessLogic.Services
                 pageNumber: 1,
                 pageSize: 10,
                 filtering: w => w.UserId == userId,
-                includes: new[] { nameof(Borrow.Book) }
+                includes: nameof(Borrow.Book)
             );
 
             return _mapper.Map<IEnumerable<WishlistDto>>(wishlists);
@@ -114,7 +113,7 @@ namespace BusinessLogic.Services
                 pageNumber: 1,
                 pageSize: 10,
                 filtering: filters.And(w => w.BookId == bookId && w.UserId == userId),
-                includes: new[] { nameof(Borrow.Book) }
+                includes: nameof(Borrow.Book)
                 );
 
             return wishlists.Any();
