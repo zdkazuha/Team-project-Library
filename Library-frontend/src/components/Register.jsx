@@ -1,64 +1,57 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { Button, Form, Input } from 'antd';
 import image from '../img/Login.jpg';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../contexts/User.context.jsx';
+import '../css/Register.css';
 
 function Register() {
   const [form] = Form.useForm();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { setEmail, getIdByEmail } = useContext(UserContext);
 
-  const { setEmail } = useContext(UserContext);
-  
-const onFinish = async (values) => {
-  console.log('Success:', values);
+  const onFinish = async (values) => {
+    if (values.password_One !== values.password_Two) return;
 
-  if(values.password_One !== values.password_Two)
-    return;
-
-  try {
-    const response = await fetch('https://localhost:7167/api/User/register', {
+    try {
+      const response = await fetch('https://localhost:7167/api/User/register', {
         method: 'POST',
-        headers: {
-            'Content-Type' : 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-            email: values.username,
-            password: values.password_One
+          email: values.username,
+          password: values.password_One
         })
-    })
+      });
 
-    if(!response.ok) {
-        throw new Error('Login failed');
+      if (!response.ok) throw new Error('Login failed');
+
+      const data = await response.json();
+      localStorage.setItem('token', data.token);
+      setEmail(values.username);
+      getIdByEmail(values.username);
+      navigate('/');
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Login failed');
     }
+  };
 
-    const data = await response.json();
-    localStorage.setItem('token', data);
-
-    setEmail(values.username);
-
-    navigate('/')
-  } catch (error) {
-    console.error('Error:', error);
-    alert('Login failed');
-  }
-
-};
-
-const onFinishFailed = errorInfo => {
-  console.log('Failed:', errorInfo);
-};
+  const onFinishFailed = (errorInfo) => {
+    console.log('Failed:', errorInfo);
+  };
 
   return (
-    <div className="container baground" style={{ backgroundImage: `url(${image})` }}>
-
-      <div className="form-container" style={{height: 500}}>
-          <h1 className="welcome" style={{marginTop: -150, paddingBottom: 50}}>Please register </h1>
+    <div
+      className="container baground"
+      style={{ backgroundImage: `url(${image})` }}
+    >
+      <div className="form-container">
+        <h1 className="welcome">Please register</h1>
         <Form
-          className='form-antd'
+          className="form-antd"
           name="basic"
           form={form}
-          layout="vertical" 
+          layout="vertical"
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           autoComplete="off"
@@ -79,7 +72,7 @@ const onFinishFailed = errorInfo => {
             <Input.Password />
           </Form.Item>
 
-        <Form.Item
+          <Form.Item
             label="Repeat your Password"
             name="password_Two"
             rules={[{ required: true, message: 'Please input your password!' }]}
@@ -88,7 +81,7 @@ const onFinishFailed = errorInfo => {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit" block style={{width: 150}}>
+            <Button type="primary" htmlType="submit">
               Submit
             </Button>
           </Form.Item>

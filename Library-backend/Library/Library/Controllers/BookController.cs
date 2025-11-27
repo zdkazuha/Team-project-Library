@@ -29,7 +29,6 @@ namespace Library.Controllers
             return Ok(books);
         }
 
-
         // GetById
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)

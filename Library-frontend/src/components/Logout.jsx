@@ -9,7 +9,6 @@ function Logout() {
 
     useEffect(() => {
         clear();
-        localStorage.removeItem('token');
         navigate('/');
     }, []);
 

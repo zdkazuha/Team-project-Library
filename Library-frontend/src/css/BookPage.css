@@ -1,0 +1,109 @@
+.book-page {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+.image-container {
+    position: relative;
+}
+
+.book-info-image {
+    width: auto;
+    height: 550px;
+}
+
+.wishlist-button,
+.borrow-button,
+.add-review-button {
+    padding: 12px 24px;
+    margin-right: 20px;
+    background-color: #00c6fb;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0, 198, 251, 0.4);
+    transition: all 0.3s ease;
+}
+
+.wishlist-button {
+    position: absolute;
+    bottom: 150px;
+    left: 0px;
+    width: 181px;
+}
+
+.borrow-button {
+    position: absolute;
+    bottom: 150px;
+    left: 210px;
+    width: 150px;
+}
+
+.add-review-button {
+    background-color: #00c6fb;
+    position: relative;
+    width: 200px;
+    margin-top: 20px;
+    margin-left: 140px;
+}
+
+.wishlist-button:hover,
+.borrow-button:hover,
+.add-review-button:hover {
+    background-color: #0099cc;
+    transform: scale(1.05);
+}
+
+.book-info {
+    height: 550px;
+    max-width: 600px;
+    margin-right: 50px;
+}
+
+.book-reviews {
+    height: 550px;
+    max-width: 500px;  
+    width: 100%;      
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+
+.reviews-container {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 10px;
+    margin-bottom: 10px;
+}
+
+.review-item {
+    margin-bottom: 9px;
+    padding: 7px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    font-size: 14px;
+    line-height: 1.4;
+    text-align: left;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.review-date {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.no-review {
+    text-align: center;
+}

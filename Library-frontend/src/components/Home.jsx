@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import BookCard from './BookCard';
 import { Button, Col, Row } from 'antd';
-import image from '../img/Home.png';
-
+import '../css/Home.css';
 
 function Home() {
-
-    const[books, setBooks] = useState([]);
-    const[page, setPage] = useState(1);
+    const [books, setBooks] = useState([]);
+    const [page, setPage] = useState(1);
     const [searchInput, setSearchInput] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -21,10 +19,7 @@ function Home() {
 
         try {
             const response = await fetch(api);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             const data = await response.json();
             setBooks(data);
         } catch (error) {
@@ -38,12 +33,9 @@ function Home() {
     }
 
     function PreviousPage() {
-        if(page === 1)
-            return;
-
+        if (page === 1) return;
         setPage(prev => prev - 1);
     }
-
 
     function handleSearchSubmit(event) {
         event.preventDefault();
@@ -57,54 +49,52 @@ function Home() {
         setPage(1);
     }
 
-  return (
-    <div className="home-container baground" style={{backgroundImage: `url(${image})`}}>
-        <h1 className='welcome' >Welcome to the Library</h1>
+    return (
+        <div className="home-container baground">
+            <h1 className="welcome">Welcome to the Library</h1>
 
-          <form className='search-form' onSubmit={handleSearchSubmit}>
-              <input
-                  className='search-input'
-                  type='text'
-                  placeholder='Search by title, author or genre'
-                  value={searchInput}
-                  aria-label='Search for a book'
-                  onChange={(event) => setSearchInput(event.target.value)}
-              />
-              <div className='search-actions'>
-                  <button className='button' type='submit'>Search</button>
-                  <button
-                      className='button secondary'
-                      type='button'
-                      onClick={resetSearch}
-                      disabled={!searchQuery && !searchInput}
-                  >
-                      Clear
-                  </button>
-              </div>
-          </form>
+            <form className="search-form" onSubmit={handleSearchSubmit}>
+                <input
+                    className="search-input"
+                    type="text"
+                    placeholder="Search by title, author or genre"
+                    value={searchInput}
+                    aria-label="Search for a book"
+                    onChange={(event) => setSearchInput(event.target.value)}
+                />
+                <div className="search-actions">
+                    <button className="button" type="submit">Search</button>
+                    <button
+                        className="button secondary"
+                        type="button"
+                        onClick={resetSearch}
+                        disabled={!searchQuery && !searchInput}
+                    >
+                        Clear
+                    </button>
+                </div>
+            </form>
 
-        <div className='home-buttons'>
-            <button className='button' onClick={PreviousPage} style={{marginRight: 16}}>Previous Page</button>
-            <button className='button' onClick={NextPage}>Next Page</button>
+            <div className="home-buttons">
+                <button className="button" onClick={PreviousPage}>Previous Page</button>
+                <button className="button" onClick={NextPage}>Next Page</button>
+            </div>
+
+            {books.length === 0 ? (
+                <h1 className="no-books">Books not found</h1>
+            ) : (
+                <div className="cards">
+                    <Row gutter={[0, 0]}>
+                        {books.map(book => (
+                            <Col key={book.id} span={4.5}>
+                                <BookCard Book={book} />
+                            </Col>
+                        ))}
+                    </Row>
+                </div>
+            )}
         </div>
-
-        { 
-            books === null || books.length === 0 
-            ? <h1 style={{textAlign: 'center', color: 'white', fontSize: "64px", paddingTop: '100px', margin: '0', marginBottom: '0'}}>
-                Books not found</h1>
-            : 
-            <div className="cards">
-                <Row gutter={[0, 0]}>
-                    {books.map(book => (
-                        <Col key={book.id} span={4.5}>
-                            <BookCard Book={book} />
-                        </Col>
-                    ))}
-                </Row>
-            </div> 
-        } 
-        </div>
-  );
-};
+    );
+}
 
 export default Home;

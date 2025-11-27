@@ -17,7 +17,7 @@ namespace WebAPI.Controllers
             _borrowService = borrowService;
         }
 
-        // [Authorize]
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAll(int pageNumber = 1)
         {
@@ -26,8 +26,8 @@ namespace WebAPI.Controllers
 
             var borrows = await _borrowService.GetAllAsync(pageNumber);
 
-            // if (!isAdmin)
-                // borrows = borrows.Where(b => b.UserId == userId);
+            if (!isAdmin)
+                borrows = borrows.Where(b => b.UserId == userId);
 
             return Ok(borrows);
         }
@@ -64,20 +64,20 @@ namespace WebAPI.Controllers
         }
 
         [Authorize]
-        [HttpPut("return/{id}")]
-        public async Task<IActionResult> ReturnBook(int id)
+        [HttpPut("return")]
+        public async Task<IActionResult> ReturnBook(int bookId, string userId)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var isAdmin = User.IsInRole("Admin");
+            //var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            //var isAdmin = User.IsInRole("Admin");
 
-            var borrow = await _borrowService.GetByIdAsync(id);
-            if (borrow == null)
-                return NotFound();
+            //var borrow = await _borrowService.GetByIdAsync(id);
+            //if (borrow == null)
+            //    return NotFound();
 
-            if (!isAdmin && borrow.UserId != userId)
-                return Forbid();
+            //if (!isAdmin && borrow.UserId != userId)
+            //    return Forbid();
 
-            var success = await _borrowService.ReturnBookAsync(id);
+            var success = await _borrowService.ReturnBookAsync(bookId, userId);
             return success ? NoContent() : NotFound();
         }
 
@@ -89,15 +89,11 @@ namespace WebAPI.Controllers
             return Ok(new { bookId, available });
         }
 
-        // 🔹 Новий ендпоінт: отримання орендованих книг користувача
-        // [Authorize]
+        [Authorize]
         [HttpGet("mybooks")]
-        public async Task<IActionResult> GetMyBooks(string userName)
+        public async Task<IActionResult> GetMyBooks(string userId)
         {
-            // var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            // var books = await _borrowService.GetUserBorrowsAsync(userId);
-
-            var books = await _borrowService.GetUserBorrowsAsync(userName);
+            var books = await _borrowService.GetUserBorrowsAsync(userId);
             return Ok(books);
         }
 
@@ -115,6 +111,14 @@ namespace WebAPI.Controllers
         {
             var success = await _borrowService.DeleteAsync(id);
             return success ? NoContent() : NotFound();
+        }
+
+        [Authorize]
+        [HttpGet("isBorrow/{bookId}")]
+        public async Task<IActionResult> IsBorrow(int bookId, string userId)
+        {
+            var isBorrowed = await _borrowService.isBorrow(bookId, userId);
+            return Ok(isBorrowed);
         }
     }
 }

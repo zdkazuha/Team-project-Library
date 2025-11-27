@@ -13,7 +13,6 @@ namespace BusinessLogic.Services
     public class WishlistService : IWishlistService
     {
         private readonly IRepository<Wishlist> _wishlistRepository;
-        private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
 
         public WishlistService(IRepository<Wishlist> wishlistRepository, UserManager<User> userManager, IMapper mapper)
@@ -41,19 +40,13 @@ namespace BusinessLogic.Services
             await _wishlistRepository.AddAsync(entity);
             return _mapper.Map<WishlistDto>(entity);
         }
-        public async Task<WishlistDto> CreateAsync(int bookId, string userName)
+
+        public async Task<WishlistDto> CreateAsync(int bookId, string userId)
         {
-            var user = await _userManager.FindByEmailAsync(userName);
-
-            if (user == null) 
-            {
-                throw new HttpException("User not found", HttpStatusCode.NotFound);
-            }
-
             var dto = new CreateWishlistDto
             {
                 BookId = bookId,
-                UserId = user.Id
+                UserId = userId
             };
 
             var entity = _mapper.Map<Wishlist>(dto);
@@ -79,14 +72,15 @@ namespace BusinessLogic.Services
             await _wishlistRepository.DeleteAsync(entity);
             return true;
         }
-        public async Task<bool> DeleteAsync(int bookId, string userName)
+
+        public async Task<bool> DeleteAsync(int bookId, string userId)
         {
             var filters = PredicateBuilder.New<Wishlist>(true);
 
             var entities = await _wishlistRepository.GetAllAsync(
                 1,
                 10,
-                filters.And(w => w.BookId == bookId && w.User.Email == userName),
+                filters.And(w => w.BookId == bookId && w.UserId == userId),
                 "Book", "User"
             );
 
@@ -99,35 +93,27 @@ namespace BusinessLogic.Services
             return true;
         }
 
-
-        public async Task<IEnumerable<WishlistDto>> GetByUserWishlistAsync(string userName)
+        public async Task<IEnumerable<WishlistDto>> GetByUserWishlistAsync(string userId)
         {
-            var user = await _userManager.FindByEmailAsync(userName);
-
-            if (user == null)
-            {
-                throw new HttpException("User not found", HttpStatusCode.NotFound);
-            }
-
             var wishlists = await _wishlistRepository.GetAllAsync(
-                1,
-                10,
-                filtering: w => w.UserId == user.Id,
-                "Book", "User"
+                pageNumber: 1,
+                pageSize: 10,
+                filtering: w => w.UserId == userId,
+                includes: nameof(Borrow.Book)
             );
 
             return _mapper.Map<IEnumerable<WishlistDto>>(wishlists);
         }
 
-        public async Task<bool> isWishlist(int bookId, string userName)
+        public async Task<bool> isWishlist(int bookId, string userId)
         {
             var filters = PredicateBuilder.New<Wishlist>(true);
 
             var wishlists = await _wishlistRepository.GetAllAsync(
-                1,
-                10,
-                filtering: filters.And(w => w.BookId == bookId && w.User.Email == userName),
-                "Book", "User"
+                pageNumber: 1,
+                pageSize: 10,
+                filtering: filters.And(w => w.BookId == bookId && w.UserId == userId),
+                includes: nameof(Borrow.Book)
                 );
 
             return wishlists.Any();

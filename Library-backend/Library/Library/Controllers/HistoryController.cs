@@ -15,28 +15,22 @@ namespace WebAPI.Controllers
             _borrowService = borrowService;
         }
 
-        //Отримати історію оренд для всіх користувачів (лише Admin)
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         [HttpGet("all")]
-        public async Task<IActionResult> GetAllHistory()
+        public async Task<IActionResult> GetAllHistory(int pageNumber = 1)
         {
-            var borrows = await _borrowService.GetAllAsync();
+            var borrows = await _borrowService.GetAllAsync(pageNumber);
             var returned = borrows.Where(b => b.ReturnedAt != null).ToList();
             return Ok(returned);
         }
 
-        //Отримати історію оренд поточного користувача
-        [AllowAnonymous] //поки без авторизації — для фронту
+        [Authorize]
         [HttpGet]
-        public async Task<IActionResult> GetUserHistory(string userName)
+        public async Task<IActionResult> GetUserHistory(string userId)
         {
-            var borrows = await _borrowService.GetUserBorrowsAsync(userName);
+            var borrows = await _borrowService.GetUserBorrowsReturnedAsync(userId);
 
-            //Фільтруємо лише повернені книги
-            var returned = borrows.Where(b => b.ReturnedAt != null).ToList();
-
-            // Не кидаємо 404 — навіть якщо порожній список
-            return Ok(returned);
+            return Ok(borrows);
         }
     }
 }

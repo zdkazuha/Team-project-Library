@@ -17,7 +17,6 @@ namespace DataAccess.Data.Entities
         public int GenreId { get; set; }
 
         // navigation properties
-
         public Author Author { get; set; }
         public Genre Genre { get; set; }
         public ICollection<Review> Reviews { get; set; } = new List<Review>();

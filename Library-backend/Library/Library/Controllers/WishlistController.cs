@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.Configurations.DTOs.WishlistDto;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Library.Controllers
@@ -16,6 +17,7 @@ namespace Library.Controllers
             _wishlistService = wishlistService;
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAll(int pageNumber = 1)
         {
@@ -23,6 +25,7 @@ namespace Library.Controllers
             return Ok(wishlists);
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
@@ -32,6 +35,7 @@ namespace Library.Controllers
             return Ok(wishlist);
         }
 
+        [Authorize]
         [HttpPost("Create")]
         public async Task<IActionResult> Create([FromBody] CreateWishlistDto dto)
         {
@@ -41,15 +45,15 @@ namespace Library.Controllers
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
+        [Authorize]
         [HttpPost("CreateByUserName")]
-        public async Task<IActionResult> Create(int bookId, string userName)
+        public async Task<IActionResult> CreateByUserName([FromQuery] int bookId, [FromQuery] string userId)
         {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
-
-            var created = await _wishlistService.CreateAsync(bookId,userName);
+            var created = await _wishlistService.CreateAsync(bookId, userId);
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateWishlistDto dto)
         {
@@ -61,6 +65,7 @@ namespace Library.Controllers
             return Ok(updated);
         }
 
+        [Authorize]
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -70,29 +75,30 @@ namespace Library.Controllers
             return NoContent();
         }
 
+        [Authorize]
         [HttpDelete("DeleteByUsername")]
-        public async Task<IActionResult> Delete(int bookId, string userName)
+        public async Task<IActionResult> Delete(int bookId, string userId)
         {
-            var deleted = await _wishlistService.DeleteAsync(bookId, userName);
+            var deleted = await _wishlistService.DeleteAsync(bookId, userId);
             if (!deleted) return NotFound();
 
             return NoContent();
         }
 
+        [Authorize]
         [HttpGet("mywishlist")]
-        public async Task<IActionResult> GetByUserWishlist(string userName)
+        public async Task<IActionResult> GetByUserWishlist(string userId)
         {
-            var wishlists = await _wishlistService.GetByUserWishlistAsync(userName);
+            var wishlists = await _wishlistService.GetByUserWishlistAsync(userId);
             return Ok(wishlists);
         }
 
+        [Authorize]
         [HttpGet("isWishlist/{bookId}")]
-        public async Task<IActionResult> IsWishlist(int bookId, string userName)
+        public async Task<IActionResult> IsWishlist(int bookId, string userId)
         {
-            var isWishlist = await _wishlistService.isWishlist(bookId, userName);
+            var isWishlist = await _wishlistService.isWishlist(bookId, userId);
             return Ok(isWishlist);
         }
-
-
     }
 }

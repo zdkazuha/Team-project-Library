@@ -3,6 +3,7 @@ using BusinessLogic.Configurations.DTOs.BorrowDto;
 using BusinessLogic.Interfaces;
 using DataAccess.Data.Entities;
 using DataAccess.Repositories;
+using LinqKit;
 using Microsoft.AspNetCore.Identity;
 using System.Net;
 
@@ -12,14 +13,12 @@ namespace BusinessLogic.Services
     {
         private readonly IRepository<Borrow> _borrowRepository;
         private readonly IRepository<Book> _bookRepository;
-        private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
 
-        public BorrowService(IRepository<Borrow> borrowRepository, IRepository<Book> bookRepository, UserManager<User> userManager, IMapper mapper)
+        public BorrowService(IRepository<Borrow> borrowRepository, IRepository<Book> bookRepository, IMapper mapper)
         {
             _borrowRepository = borrowRepository;
             _bookRepository = bookRepository;
-            _userManager = userManager;
             _mapper = mapper;
         }
 
@@ -75,15 +74,19 @@ namespace BusinessLogic.Services
             return _mapper.Map<BorrowDto>(borrow);
         }
 
-        public async Task<bool> ReturnBookAsync(int id)
+        public async Task<bool> ReturnBookAsync(int bookId, string userId)
         {
-            var borrow = await _borrowRepository.GetByIdAsync(
-                id,
-                includes: new[] { nameof(Borrow.Book) }
+            var borrows = await _borrowRepository.GetAllAsync(
+                pageNumber: 1,
+                pageSize: 1,
+                filtering: b => b.BookId == bookId && b.UserId == userId && b.ReturnedAt == null,
+                includes: nameof(Borrow.Book)
             );
 
-            if (borrow == null)
+            if (borrows.Count == 0)
                 return false;
+
+            var borrow = borrows[0];
 
             if (borrow.ReturnedAt != null)
                 throw new Exception("Book already returned.");
@@ -137,19 +140,38 @@ namespace BusinessLogic.Services
             return book.AvailableCopies > 0;
         }
 
-        public async Task<IEnumerable<BorrowDto>> GetUserBorrowsAsync(string userName)
+        public async Task<IEnumerable<BorrowDto>> GetUserBorrowsAsync(string userId)
         {
-            var user = await _userManager.FindByEmailAsync(userName);
-
-            if (user == null)
-                throw new HttpException("User not found.", HttpStatusCode.NotFound);
-
             var borrows = await _borrowRepository.GetAllAsync(
-                filtering: b => b.UserId == user.Id,
+                filtering: b => b.UserId == userId && b.ReturnedAt == null,
                 includes: new[] { nameof(Borrow.Book) }
             );
 
             return _mapper.Map<IEnumerable<BorrowDto>>(borrows);
         }
+
+        public async Task<IEnumerable<BorrowDto>> GetUserBorrowsReturnedAsync(string userId)
+        {
+            var borrows = await _borrowRepository.GetAllAsync(
+                filtering: b => b.UserId == userId && b.ReturnedAt != null,
+                includes: new[] { nameof(Borrow.Book) }
+            );
+
+            return _mapper.Map<IEnumerable<BorrowDto>>(borrows);
+        }
+
+        public async Task<bool> isBorrow(int bookId, string userId)
+        {
+            var filters = PredicateBuilder.New<Borrow>(true);
+
+            var wishlists = await _borrowRepository.GetAllAsync(
+                1,
+                10,
+                filtering: filters.And(w => w.BookId == bookId && w.UserId == userId),
+                "Book", "User"
+                );
+
+            return wishlists.Any();
+        }
     }
-}
+}   

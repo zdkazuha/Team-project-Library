@@ -1,0 +1,31 @@
+.baground-mybooks {
+  min-height: 100vh;
+  width: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  flex-direction: column;
+  padding-top: 150px;  
+  text-align: center;
+  color: white;
+}
+
+.welcome-mybooks {
+  font-size: 45px;  
+  font-weight: bold;
+  margin: 0 0 25px 0;  
+}
+
+.no-books-mybooks {
+  text-align: center;
+  color: white;
+  font-size: 64px;  
+  padding-top: 100px;  
+  margin: 0;  
+}
+
+.cards-mybooks {
+  margin-top: 50px;  
+  width: 100%;
+}

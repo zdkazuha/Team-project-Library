@@ -36,7 +36,7 @@ namespace WebAPI.Controllers
         public async Task<IActionResult> GetAll() =>
             Ok(await _userService.GetAllAsync());
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(string id)
         {
@@ -44,14 +44,15 @@ namespace WebAPI.Controllers
             return user == null ? NotFound() : Ok(user);
         }
 
-        [HttpGet("user/{username}")]
-        public async Task<IActionResult> GetByUsername(string username)
+        [Authorize]
+        [HttpGet("user/{email}")]
+        public async Task<IActionResult> GetUserByEmailAsync(string email)
         {
-            var user = await _userService.GetByUsernameAsync(username);
+            var user = await _userService.GetUserByEmailAsync(email);
             return user == null ? NotFound() : Ok(user);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(string id, UpdateUserDto dto)
         {

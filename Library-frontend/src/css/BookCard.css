@@ -1,0 +1,23 @@
+.card {
+    width: 240px;
+    height: 350px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    margin-left: 70px;
+    overflow: hidden;
+}
+
+.book-image {
+    width: 240px;
+    height: 350px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 1px solid black;
+    transition: transform 0.3s ease;
+    object-fit: cover;
+}
+
+.book-image:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+}

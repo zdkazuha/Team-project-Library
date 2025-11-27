@@ -3,17 +3,18 @@ import image from "../img/BookPage.png"
 import { useParams } from "react-router-dom";
 import AddReviewModal from "./AddReviewModal";
 import { UserContext } from "../contexts/User.context";
+import '../css/BookPage.css';
 
 function BookPage() {
-
-    const { email, isAuth } = useContext(UserContext);
+    const {id: userId, isAuth } = useContext(UserContext);
     const [showModal, setShowModal] = useState(false);
-    const [isWishlist, setWishlist] = useState();
+    const [isWishlist, setWishlist] = useState(false);
+    const [isBorrow, setBorrow] = useState();
     const [review, setReview] = useState([]);
     const [author, setAuthor] = useState();
     const [genre, setGenre] = useState();
     const [book, setBook] = useState();
-    const { id } = useParams();
+    const {id } = useParams();
     
     useEffect(() => {
         fetchData(`https://localhost:7167/api/Book/${id}`, setBook);
@@ -24,16 +25,15 @@ function BookPage() {
         fetchData(`https://localhost:7167/api/Genre/${book.genreId}`, setGenre);
         fetchData(`https://localhost:7167/api/Author/${book.authorId}`, setAuthor);
         fetchData(`https://localhost:7167/api/Review?bookTitle=${encodeURIComponent(book.title)}&pageNumber=1`, setReview);
-        fetchData(`https://localhost:7167/api/Wishlist/isWishlist/1?userName=${email}`, setWishlist);
+        isWishlistFunc();
+        isBorrowFunc();
     }, [book]);
-
 
     async function fetchData(url, setState) {
         try {
             const response = await fetch(url);
             const data = await response.json();
             setState(data);
-            console.log(data);
         } catch (err) {
             console.error("Error fetching data:", err);
         }
@@ -43,7 +43,7 @@ function BookPage() {
         if (book) {
             fetchData(`https://localhost:7167/api/Review?bookTitle=${encodeURIComponent(book.title)}&pageNumber=1`, setReview);
         }
-    };
+    }
 
     const AddOrRemoveWishlist = () => {
       if(!book) return;
@@ -55,177 +55,175 @@ function BookPage() {
 
       if(!isWishlist) {
         AddToWishlist();
-      }
-      else {
+      } else {
         RemoveFromWishlist();
       }
     }
 
-    function AddToWishlist() {
-          fetch(`https://localhost:7167/api/Wishlist/CreateByUserName?bookId=${book.id}&userName=${email}`, {
-          method: 'POST'
-        })
+    async function AddToWishlist() {
+      try {
+          const response = await fetch(`https://localhost:7167/api/Wishlist/CreateByUserName?bookId=${book.id}&userId=${userId}`, {
+              method: 'POST',
+              headers: {
+                  Authorization: `Bearer ${localStorage.getItem("token")}`
+              }
+          })
 
-        .then(response => response.json())
-        .then(data => {
-          console.log('Success:', data);
-          alert('Book added to wishlist!');
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-          alert('Failed to add book to wishlist.');
-        });
+          if (!response.ok) {
+              const error = await response.text();
+              console.error("Failed to add to wishlist:", error);
+              return;
+          }
 
-        setWishlist(true);
-    }
+          const data = await response.json();
+          setWishlist(true);
+          console.log("Added to wishlist:", data);
+      } catch (err) {
+          console.error("Error:", err);
+      }
+  }
+
 
     function RemoveFromWishlist() {
-          fetch(`https://localhost:7167/api/Wishlist/DeleteByUsername?bookId=${book.id}&userName=${email}`, {
-          method: 'DELETE'
+        fetch(`https://localhost:7167/api/Wishlist/DeleteByUsername?bookId=${book.id}&userId=${userId}`, {
+            method: 'DELETE',
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
         })
-
+        .then(response => {
+            if (!response.ok) { throw new Error("Failed to remove from wishlist"); }
+            return response.text();
+        })
+        .then(data => {
+            console.log("Removed from wishlist:", data);
+        })
+        .catch(err => console.error("Error:", err));
         setWishlist(false);
     }
 
+    function isWishlistFunc() {
+        if(isAuth()) {
+          fetch(`https://localhost:7167/api/Wishlist/isWishlist/${id}?userId=${userId}`, {
+            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+          })
+          .then(response => response.json())
+          .then(data => setWishlist(data));
+        }
+    }
+
+    function BorrowOrReturnBook () {
+        if(!book) return;
+
+        if(!isAuth()) {
+          alert('You need to be logged in to borrow books.');
+          return;
+        }
+
+        if(!isBorrow) {
+          BorrowBook();
+        } else {
+          ReturnBook();
+        }
+    }
+
+    function BorrowBook() {
+      fetch(`https://localhost:7167/api/Borrow/borrow`, {
+          method: "POST",
+          headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+              'Content-Type' : 'application/json'
+        },
+        body: JSON.stringify({
+            BookId: id,
+            UserId: userId,
+            BorrowedAt: new Date().toISOString(),
+            DueDate: new Date(new Date().setDate(new Date().getDate() + 14)).toISOString(),
+            ReturnedAt: null
+        })
+      })
+      .then(response => response.json())
+      .then(data => setBorrow(data));
+      console.log(data);
+    }
+
+    function ReturnBook() {
+      fetch(`https://localhost:7167/api/Borrow/return?bookId=${id}&userId=${userId}`, {
+        method: "PUT",
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+      })
+      .then(response => { if (response.ok) return true; throw new Error("Return failed"); })
+      .then(() => setBorrow(false))
+      .catch(err => console.error(err));
+    }
+
+    function isBorrowFunc() {
+      fetch(`https://localhost:7167/api/Borrow/isBorrow/${id}?userId=${userId}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+      })
+      .then(response => response.json())
+      .then(data => setBorrow(data));
+    }
+
     return (
-    <div className="book-page baground" style={{ backgroundImage: `url(${image})` }}>
-        {book ? (
-        <>
-            <div className="image-container">
-            <img
-                src={book.coverImage}
-                alt={book.title}
-                className="book-info-image"
-            />
+        <div className="book-page baground" style={{ backgroundImage: `url(${image})` }}>
+            {book ? (
+            <>
+                <div className="image-container">
+                    <img src={book.coverImage} alt={book.title} className="book-info-image" />
 
-            <button
-            onClick={AddOrRemoveWishlist}
-            style={{
-            padding: '12px 24px',
-            marginRight: 20,
-            backgroundColor: '#232d30ff',
-            color: 'white',
-            border: 'none',
-            borderRadius: 25,
-            fontSize: 16,
-            fontWeight: 'bold',
-            cursor: 'pointer',
-            boxShadow: '0 4px 15px rgba(0, 198, 251, 0.4)',
-            transition: 'all 0.3s ease',
-            position: 'absolute',
-            bottom: 150,
-            left: 230,
-            width: 220,
-          }}
-          onMouseOver={(e) => {
-            e.target.style.backgroundColor = '#0099cc';
-            e.target.style.transform = 'scale(1.05)';
-          }}
-          onMouseOut={(e) => {
-            e.target.style.backgroundColor = '#00c6fb';
-            e.target.style.transform = 'scale(1)';
-          }}
-            >
-              {
-              isWishlist == false ? 'Add to wishlist' : 'Remove from wishlist'
-              }
-              </button>
+                    <button className="wishlist-button" onClick={AddOrRemoveWishlist}>
+                        { isWishlist === false ? 'Add (wishlist)' : 'Remove (wishlist)' }
+                    </button>
 
-            </div>
+                    <button className="borrow-button" onClick={BorrowOrReturnBook}>
+                        { isBorrow === false ? 'Borrow' : 'Return' }
+                    </button>
+                </div>
 
-            <div className="book-info" style={{height: 550, width: 700, marginRight: 50}}>
-                <p>Title: {book.title}</p>
-                <p>Published Date: {book.publishedDate.slice(0, 10)}</p>
-                <p>Available Copies: {book.availableCopies}</p>
-                <p>Author: {author?.name}</p>
-                <p>Genre: {genre?.name}</p>
-            </div>
+                <div className="book-info">
+                    <p>Title: {book.title}</p>
+                    <p>Published Date: {book.publishedDate.slice(0, 10)}</p>
+                    <p>Available Copies: {book.availableCopies}</p>
+                    <p>Author: {author?.name}</p>
+                    <p>Genre: {genre?.name}</p>
+                </div>
 
-            <div className="book-info"
-              style={{
-                height: 537,
-                width: 400,
-                display: 'flex',
-                flexDirection: 'column',
-                overflow: 'hidden', 
-              }}
->
-              <div
-                style={{
-                flex: 1,
-                overflowY: 'auto',
-                paddingRight: 10,
-                marginBottom: 10,
-                }}
-              >
-                {review && review.length > 0 ? (
-                  review.map((r, index) => (
-                    <div
-                      key={index}
-                      style={{
-                        marginBottom: 9,
-                        padding: 7,
-                        borderRadius: 20,
-                        border: '1px solid rgba(255, 255, 255, 0.3)',
-                        color: 'white',
-                        fontSize: 14,
-                        lineHeight: 1.4,
-                        textAlign: 'left',
-                      }}
-                >
-          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-            <strong>{r.userName}</strong>
-            <span style={{ color: '#00c6fb' }}>⭐ {r.rating}</span>
-          </div>
-          <p style={{ margin: '2px 0' }}>{r.comment}</p>
-          <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.6)' }}>
-            {r.createdAt?.slice(0, 10)} {r.createdAt?.slice(11, 19)}
-          </p>
+                <div> 
+                  <div className="book-info book-reviews">
+                    <div className="reviews-container">
+                        {review && review.length > 0 ? (
+                          review.map((r, index) => (
+                            <div key={index} className="review-item">
+                                <div className="review-header">
+                                    <strong>{r.userName}</strong>
+                                    <span>⭐ {r.rating}</span>
+                                </div>
+                                <p>{r.comment}</p>
+                                <p className="review-date">{r.createdAt?.slice(0, 10)} {r.createdAt?.slice(11, 19)}</p>
+                            </div>
+                          ))
+                        ) : (
+                          <p className="no-review">Review not found</p>
+                        )}
+                    </div>    
+                  </div>
+
+                  <button className="add-review-button" onClick={() => setShowModal(true)}>
+                    Add Review
+                  </button>
+                </div>
+                
+
+                <AddReviewModal 
+                    show={showModal}
+                    onClose={() => setShowModal(false)}
+                    bookTitle={book.title}
+                    onReviewAdded={handleReviewAdded}
+                />
+            </>
+            ) : (
+            <p>Loading...</p>
+            )}
         </div>
-      ))
-    ) : (
-      <p style={{ textAlign: 'center' }}>Review not found</p>
-    )}
-  </div>
-
-  <button
-    onClick={() => setShowModal(true)}
-    style={{
-      padding: '12px 24px',
-      marginRight: 20,
-      backgroundColor: '#00c6fb',
-      color: 'white',
-      border: 'none',
-      borderRadius: 25,
-      fontSize: 16,
-      fontWeight: 'bold',
-      cursor: 'pointer',
-      boxShadow: '0 4px 15px rgba(0, 198, 251, 0.4)',
-      transition: 'all 0.3s ease',
-    }}
-    onMouseOver={(e) => {
-      e.target.style.backgroundColor = '#0099cc';
-      e.target.style.transform = 'scale(1.05)';
-    }}
-    onMouseOut={(e) => {
-      e.target.style.backgroundColor = '#00c6fb';
-      e.target.style.transform = 'scale(1)';
-    }}
-  >
-    Add Review
-  </button>
-</div>
-            <AddReviewModal 
-                show={showModal}
-                onClose={() => setShowModal(false)}
-                bookTitle={book.title}
-                onReviewAdded={handleReviewAdded}
-            />
-        </>
-        ) : (
-        <p>Loading...</p>
-        )}
-    </div>
     );
 }
 

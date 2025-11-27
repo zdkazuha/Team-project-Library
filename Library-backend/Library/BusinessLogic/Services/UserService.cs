@@ -39,11 +39,12 @@ namespace BusinessLogic.Services
             return user == null ? null : _mapper.Map<UserDto>(user);
         }
 
-        public async Task<UserDto?> GetByUsernameAsync(string username)
+        public async Task<UserDto?> GetUserByEmailAsync(string userId)
         {
-            var user = await _userManager.FindByEmailAsync(username);
+            var user = await _userManager.FindByEmailAsync(userId);
             return user == null ? null : _mapper.Map<UserDto>(user);
         }
+
         public async Task<UserDto> CreateAsync(CreateUserDto dto)
         {
             var user = _mapper.Map<User>(dto);
