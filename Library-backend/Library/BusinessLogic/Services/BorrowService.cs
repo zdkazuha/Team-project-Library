@@ -80,7 +80,7 @@ namespace BusinessLogic.Services
                 pageNumber: 1,
                 pageSize: 1,
                 filtering: b => b.BookId == bookId && b.UserId == userId && b.ReturnedAt == null,
-                includes: new[] { nameof(Borrow.Book) }
+                includes: nameof(Borrow.Book)
             );
 
             if (borrows.Count == 0)
