@@ -83,7 +83,7 @@ namespace BusinessLogic.Services
                 includes: new[] { nameof(Borrow.Book) }
             );
 
-            if (borrows.Count() == 0)
+            if (borrows.Count == 0)
                 return false;
 
             var borrow = borrows[0];
