@@ -1,4 +1,4 @@
-name: Build and Deploy ASP.NET Core App to Azure
+name: Build and Deploy ASP.NET Core Web API to Azure
 
 on:
   push:
@@ -11,27 +11,20 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v3
+      - uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 9.0.x
 
-      - name: Restore dependencies
-        run: dotnet restore Library-backend/Library/Library/Library.csproj
+      - run: dotnet restore Library-backend/Library/Library/Library.csproj
 
-      - name: Build project
-        run: dotnet build Library-backend/Library/Library.sln --configuration Release --no-restore
+      - run: dotnet build Library-backend/Library/Library/Library.csproj --configuration Release --no-restore
 
-      - name: Publish project
-        run: dotnet publish Library-backend/Library/Library.sln --configuration Release --output ./publish --no-restore
+      - run: dotnet publish Library-backend/Library/Library/Library.csproj --configuration Release --output Library-backend/Library/Library/publish --no-restore
 
-      - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v2
+      - uses: azure/webapps-deploy@v2
         with:
           app-name: "ProjectLibrary"
           publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
-          package: ./Library-backend/Library/publish
-
+          package: Library-backend/Library/Library/publish
