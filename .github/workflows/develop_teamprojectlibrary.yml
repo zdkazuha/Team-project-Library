@@ -1,4 +1,4 @@
-name: Build and Deploy ASP.NET Core app
+name: Build and deploy ASP.Net Core app to Azure Web App - TeamProjectLibrary
 
 on:
   push:
@@ -7,27 +7,46 @@ on:
   workflow_dispatch:
 
 jobs:
+  build:
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.x'
+      - name: Build
+        run: dotnet build --configuration Release
+      - name: Publish
+        run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: .net-app
+          path: ${{env.DOTNET_ROOT}}/myapp
+
   deploy:
     runs-on: windows-latest
-    needs: build  # якщо у тебе є job build, інакше можна прибрати
-
+    needs: build
+    permissions:
+      id-token: write
+      contents: read
     steps:
-      - name: Download artifact from build job
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
           name: .net-app
-          path: ./publish
-
       - name: Login to Azure
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_B409F5CD8EFE4E76A334426525DCAE66 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_7536B0C628BA4CA784DBC2916F973121 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_4D7728DCE9094559AFF4C2927C53A0CB }}
-
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'TeamProjectLibrary'
           slot-name: 'Production'
-          package: ./publish
+          package: .
