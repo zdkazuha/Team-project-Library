@@ -21,9 +21,9 @@ jobs:
         with:
           dotnet-version: '9.x'
       - name: Build Web API
-        run: dotnet build Library-backend/Library/Library.csproj --configuration Release
+        run: dotnet build Library-backend/Library/Library/Library.csproj --configuration Release
       - name: Publish Web API
-        run: dotnet publish Library-backend/Library/Library.csproj -c Release -o ./publish
+        run: dotnet publish Library-backend/Library/Library/Library.csproj -c Release -o ./publish
 
       # --- Build React frontend ---
       - name: Set up Node.js
