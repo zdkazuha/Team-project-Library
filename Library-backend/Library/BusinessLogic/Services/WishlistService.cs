@@ -15,10 +15,9 @@ namespace BusinessLogic.Services
         private readonly IRepository<Wishlist> _wishlistRepository;
         private readonly IMapper _mapper;
 
-        public WishlistService(IRepository<Wishlist> wishlistRepository, UserManager<User> userManager, IMapper mapper)
+        public WishlistService(IRepository<Wishlist> wishlistRepository, IMapper mapper)
         {
             _wishlistRepository = wishlistRepository;
-            _userManager = userManager;
             _mapper = mapper;
         }
 
