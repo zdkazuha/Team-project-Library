@@ -1,4 +1,4 @@
-name: Build and deploy ASP.Net Core app to Azure Web App - TeamProjectLibrary
+name: Build and Deploy ASP.Net Core + React to Azure Web App
 
 on:
   push:
@@ -11,21 +11,43 @@ jobs:
     runs-on: windows-latest
     permissions:
       contents: read
+
     steps:
       - uses: actions/checkout@v4
+
+      # --- Build Web API ---
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.x'
-      - name: Build
-        run: dotnet build --configuration Release
-      - name: Publish
-        run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
-      - name: Upload artifact
+      - name: Build Web API
+        run: dotnet build Library-backend/Library/Library.csproj --configuration Release
+      - name: Publish Web API
+        run: dotnet publish Library-backend/Library/Library.csproj -c Release -o ./publish
+
+      # --- Build React frontend ---
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+      - name: Install frontend dependencies
+        run: |
+          cd Library-frontend
+          npm install
+      - name: Build React frontend
+        run: |
+          cd Library-frontend
+          npm run build
+      - name: Copy React build to wwwroot
+        run: |
+          mkdir -p ./publish/wwwroot
+          cp -r Library-frontend/build/* ./publish/wwwroot/
+
+      - name: Upload artifact for deployment
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: ./publish
 
   deploy:
     runs-on: windows-latest
@@ -49,4 +71,4 @@ jobs:
         with:
           app-name: 'TeamProjectLibrary'
           slot-name: 'Production'
-          package: .
+          package: ./publish
