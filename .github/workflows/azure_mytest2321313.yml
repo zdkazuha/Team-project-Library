@@ -15,11 +15,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. Встановлення .NET SDK
+      # 2. Встановлення .NET SDK 9
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 8.0.x  # або версія, яку ти використовуєш
+          dotnet-version: 9.0.x
 
       # 3. Відновлення пакетів
       - name: Restore dependencies
@@ -37,7 +37,6 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: "MyTest2321313"         # заміни на свій Azure App Service
+          app-name: "MyTest2321313"                     # <- твій Azure App Service
           publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
           package: ./Library-backend/Library/publish
-
