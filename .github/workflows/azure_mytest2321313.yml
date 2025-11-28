@@ -37,6 +37,7 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: "YOUR_APP_SERVICE_NAME"         # заміни на свій Azure App Service
+          app-name: "MyTest2321313"         # заміни на свій Azure App Service
           publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
           package: ./Library-backend/Library/publish
+
