@@ -1,0 +1,42 @@
+name: Build and Deploy ASP.NET Core App to Azure
+
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest
+
+    steps:
+      # 1. Checkout репозиторію
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Встановлення .NET SDK 9
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 9.0.x
+
+      # 3. Відновлення пакетів
+      - name: Restore dependencies
+        run: dotnet restore Library-backend/Library/Library.sln
+
+      # 4. Build проекту
+      - name: Build project
+        run: dotnet build Library-backend/Library/Library.sln --configuration Release --no-restore
+
+      # 5. Publish проекту
+      - name: Publish project
+        run: dotnet publish Library-backend/Library/Library.sln --configuration Release --output ./publish --no-restore
+
+      # 6. Деплой на Azure Web App
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: "MyTest2321313"                     # <- твій Azure App Service
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+          package: ./Library-backend/Library/publish
