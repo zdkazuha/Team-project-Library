@@ -20,7 +20,7 @@ jobs:
           dotnet-version: 9.0.x
 
       - name: Restore dependencies
-        run: dotnet restore Library-backend/Library/Library.sln
+        run: dotnet restore Library-backend/Library/Library/Library.csproj
 
       - name: Build project
         run: dotnet build Library-backend/Library/Library.sln --configuration Release --no-restore
@@ -34,3 +34,4 @@ jobs:
           app-name: "ProjectLibrary"
           publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
           package: ./Library-backend/Library/publish
+
