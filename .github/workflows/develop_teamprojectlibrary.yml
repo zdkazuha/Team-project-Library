@@ -9,23 +9,27 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      # --- Build .NET API ---
+      # --- Build Backend ---
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.x'
 
-      - name: Build API
+      - name: Build .NET Backend
         run: dotnet build Library-backend/Library/Library/Library.csproj --configuration Release
 
-      - name: Publish API
-        run: dotnet publish Library-backend/Library/Library/Library.csproj -c Release -o ${{ github.workspace }}/publish
+      - name: Publish .NET Backend
+        run: dotnet publish Library-backend/Library/Library/Library.csproj -c Release -o ./publish
 
-      # --- Build React frontend ---
+      # --- Build Frontend ---
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -36,29 +40,28 @@ jobs:
           cd Library-frontend
           npm install
 
-      - name: Build frontend
+      - name: Build React frontend
         run: |
           cd Library-frontend
           npm run build
 
-      # --- Copy frontend build to wwwroot ---
-      - name: Copy frontend to wwwroot
-        shell: pwsh
+      - name: Copy frontend build to wwwroot
         run: |
-          $wwwroot = "${{ github.workspace }}/publish/wwwroot"
-          New-Item -ItemType Directory -Force -Path $wwwroot
-          Copy-Item -Path "${{ github.workspace }}/Library-frontend/dist/*" -Destination $wwwroot -Recurse -Force
+          mkdir -p ./publish/wwwroot
+          cp -r Library-frontend/dist/* ./publish/wwwroot/
 
-      # --- Upload artifact ---
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: dotnet-app
-          path: ${{ github.workspace }}/publish
+          path: ./publish
 
   deploy:
     runs-on: windows-latest
     needs: build
+    permissions:
+      contents: read
+      id-token: write
 
     steps:
       - name: Download artifact
@@ -66,7 +69,7 @@ jobs:
         with:
           name: dotnet-app
 
-      - name: Login to Azure
+      - name: Azure Login
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_B409F5CD8EFE4E76A334426525DCAE66 }}
@@ -78,4 +81,4 @@ jobs:
         with:
           app-name: 'TeamProjectLibrary'
           slot-name: 'Production'
-          package: ${{ github.workspace }}/publish
+          package: ./publish
