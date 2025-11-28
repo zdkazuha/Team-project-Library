@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { Button, Form, Input } from 'antd';
 import image from '../img/Login.jpg';
 import { useNavigate } from 'react-router-dom';
@@ -9,52 +9,39 @@ import { toast } from './ToastContainer';
 function Login() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-
   const { setEmail, getIdByEmail } = useContext(UserContext);
 
   const onFinish = async (values) => {
-    console.log('Success:', values);
-
     try {
       const response = await fetch('https://localhost:7167/api/User/login', {
-          method: 'POST',
-          headers: { 'Content-Type' : 'application/json' },
-          body: JSON.stringify({
-              email: values.username,
-              password: values.password
-          })
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: values.username,
+          password: values.password
+        })
       });
 
-    if(!response.ok) {
-      if (response.ok) {
-        toast.success('✅ Registration successful!');
-      } else {
-        toast.error('❌ Registration failed.');
-  }
-    }
+      if (!response.ok) {
+        toast.error('❌ Login failed.');
+        return;
+      }
 
-    const data = await response.json();
-    localStorage.setItem('token', data);
-
-    setEmail(values.username);
+      const data = await response.json();
 
       localStorage.setItem('token', data.token);
-
       setEmail(values.username);
       getIdByEmail(values.username);
-  } catch (error) {
-    console.error('Error:', error);
-    toast.error('❌ Login failed.');
-  }
 
+      toast.success('✅ Login successful!');
       navigate('/');
     } catch (error) {
       console.error('Error:', error);
-      alert('Login failed');
+      toast.error('❌ Login failed.');
     }
   };
 
-  const onFinishFailed = errorInfo => {
+  const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
 
@@ -76,7 +63,7 @@ function Login() {
             name="username"
             rules={[{ required: true, message: 'Please input your username!' }]}
           >
-            <Input className="form-input"/>
+            <Input className="form-input" />
           </Form.Item>
 
           <Form.Item
@@ -84,7 +71,7 @@ function Login() {
             name="password"
             rules={[{ required: true, message: 'Please input your password!' }]}
           >
-            <Input.Password className="form-input"/>
+            <Input.Password className="form-input" />
           </Form.Item>
 
           <Form.Item>
