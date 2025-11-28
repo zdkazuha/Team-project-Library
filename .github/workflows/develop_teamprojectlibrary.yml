@@ -40,8 +40,8 @@ jobs:
           npm run build
       - name: Copy React build to wwwroot
         run: |
-          mkdir -p ./publish/wwwroot
-          cp -r Library-frontend/build/* ./publish/wwwroot/
+          mkdir ./publish/wwwroot
+          Copy-Item -Path Library-frontend/dist/* -Destination ./publish/wwwroot/ -Recurse
 
       - name: Upload artifact for deployment
         uses: actions/upload-artifact@v4
