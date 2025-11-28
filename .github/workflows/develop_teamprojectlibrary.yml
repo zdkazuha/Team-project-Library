@@ -9,64 +9,62 @@ on:
 jobs:
   build:
     runs-on: windows-latest
-    permissions:
-      contents: read
 
     steps:
-      # --- Checkout code ---
       - uses: actions/checkout@v4
 
-      # --- Build Web API ---
-      - name: Set up .NET Core
+      # --- Build .NET API ---
+      - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '9.x'
-      - name: Build Web API
-        run: dotnet build Library-backend/Library/Library/Library.csproj --configuration Release
-      - name: Publish Web API
-        run: dotnet publish Library-backend/Library/Library/Library.csproj -c Release -o ./publish
 
-      # --- Build React frontend (Vite) ---
-      - name: Set up Node.js
+      - name: Build API
+        run: dotnet build Library-backend/Library/Library/Library.csproj --configuration Release
+
+      - name: Publish API
+        run: dotnet publish Library-backend/Library/Library/Library.csproj -c Release -o ${{ github.workspace }}/publish
+
+      # --- Build React frontend ---
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20.x'
+
       - name: Install frontend dependencies
         run: |
           cd Library-frontend
           npm install
-      - name: Build React frontend
+
+      - name: Build frontend
         run: |
           cd Library-frontend
           npm run build
 
-      # --- Copy React build to wwwroot ---
-      - name: Copy React build to wwwroot
+      # --- Copy frontend build to wwwroot ---
+      - name: Copy frontend to wwwroot
         shell: pwsh
         run: |
-          $publishPath = "$(pwd)/publish/wwwroot"
-          New-Item -ItemType Directory -Force -Path $publishPath
-          Copy-Item -Path "$(pwd)/Library-frontend/dist/*" -Destination $publishPath -Recurse -Force
+          $wwwroot = "${{ github.workspace }}/publish/wwwroot"
+          New-Item -ItemType Directory -Force -Path $wwwroot
+          Copy-Item -Path "${{ github.workspace }}/Library-frontend/dist/*" -Destination $wwwroot -Recurse -Force
 
-      # --- Upload artifact for deployment ---
-      - name: Upload artifact for deployment
+      # --- Upload artifact ---
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: .net-app
-          path: ./publish
+          name: dotnet-app
+          path: ${{ github.workspace }}/publish
 
   deploy:
     runs-on: windows-latest
     needs: build
-    permissions:
-      id-token: write
-      contents: read
 
     steps:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: .net-app
+          name: dotnet-app
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -80,4 +78,4 @@ jobs:
         with:
           app-name: 'TeamProjectLibrary'
           slot-name: 'Production'
-          package: ./publish
+          package: ${{ github.workspace }}/publish
