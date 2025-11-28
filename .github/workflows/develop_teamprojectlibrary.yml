@@ -1,24 +1,33 @@
-deploy:
-  runs-on: windows-latest
-  needs: build
+name: Build and Deploy ASP.NET Core app
 
-  steps:
-    - name: Download artifact from build job
-      uses: actions/download-artifact@v4
-      with:
-        name: .net-app
-        path: ./publish
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
 
-    - name: Login to Azure
-      uses: azure/login@v2
-      with:
-        client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_B409F5CD8EFE4E76A334426525DCAE66 }}
-        tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_7536B0C628BA4CA784DBC2916F973121 }}
-        subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_4D7728DCE9094559AFF4C2927C53A0CB }}
+jobs:
+  deploy:
+    runs-on: windows-latest
+    needs: build  # якщо у тебе є job build, інакше можна прибрати
 
-    - name: Deploy to Azure Web App
-      uses: azure/webapps-deploy@v3
-      with:
-        app-name: 'TeamProjectLibrary'
-        slot-name: 'Production'
-        package: ./publish
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: .net-app
+          path: ./publish
+
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_B409F5CD8EFE4E76A334426525DCAE66 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_7536B0C628BA4CA784DBC2916F973121 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_4D7728DCE9094559AFF4C2927C53A0CB }}
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'TeamProjectLibrary'
+          slot-name: 'Production'
+          package: ./publish
