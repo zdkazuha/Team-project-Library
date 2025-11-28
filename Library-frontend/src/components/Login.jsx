@@ -38,7 +38,6 @@ function Login() {
 
     setEmail(values.username);
 
-      const data = await response.json();
       localStorage.setItem('token', data.token);
 
       setEmail(values.username);
