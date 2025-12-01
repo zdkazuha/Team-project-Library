@@ -33,7 +33,7 @@ namespace Library.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var book = await _bookService.GetByIdAsync(id);
+            var book = await _bookService.GetByIdAsync(id); 
             if (book == null)
                 return NotFound($"Book with id {id} not found.");
 
