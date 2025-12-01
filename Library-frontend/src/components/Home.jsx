@@ -15,8 +15,7 @@ function Home() {
 
     async function fetchBooks() {
         const searchParam = searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : '';
-        // const api = `https://localhost:7167/api/Book?pageNumber=${page}${searchParam}`;
-        const api = `https://projectlibrary.azurewebsites.net/api/Book?pageNumber=${page}${searchParam}`;
+        const api = process.env.REACT_APP_API + `Book?pageNumber=${page}${searchParam}`;
 
         try {
             const response = await fetch(api);

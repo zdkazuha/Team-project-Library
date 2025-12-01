@@ -14,7 +14,7 @@ function RentalHistoryPage() {
 
   async function fetchHistory() {
     try {
-      const response = await fetch(`https://localhost:7167/api/History?userId=${id}`, {
+      const response = await fetch(process.env.REACT_APP_API + `History?userId=${id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       if (response.ok) {

@@ -19,7 +19,7 @@ function Register() {
     }
 
     try {
-      const response = await fetch('https://localhost:7167/api/User/register', {
+      const response = await fetch(process.env.REACT_APP_API + 'User/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
