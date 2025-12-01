@@ -6,6 +6,8 @@ function AddReviewModal({ show, onClose, bookTitle, onReviewAdded }) {
     const [comment, setComment] = useState("");
     const [error, setError] = useState("");
 
+    const API = import.meta.env.VITE_API;
+
     if (!show) return null;
 
     const handleSubmit = async () => {
@@ -24,7 +26,7 @@ function AddReviewModal({ show, onClose, bookTitle, onReviewAdded }) {
                 return;
             }
 
-            const response = await fetch(process.env.REACT_APP_API + 'Review', {
+            const response = await fetch(API + 'Review', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

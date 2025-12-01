@@ -10,10 +10,10 @@ function Login() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const { setEmail, getIdByEmail } = useContext(UserContext);
-
+  const API = import.meta.env.VITE_API;
   const onFinish = async (values) => {
     try {
-      const response = await fetch(process.env.REACT_APP_API + 'User/login', {
+      const response = await fetch(API + 'User/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

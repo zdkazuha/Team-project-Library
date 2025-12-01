@@ -8,7 +8,7 @@ import '../css/MyBooksPage.css';
 function MyBooksPage() {
     const [books, setBooks] = useState([]);
     const { id, email } = useContext(UserContext);
-
+    const API = import.meta.env.VITE_API;
     useEffect(() => {
         fetchBooks();
     }, []);
@@ -17,7 +17,7 @@ function MyBooksPage() {
         if (!email) return;
 
         try {
-            const response = await fetch(process.env.REACT_APP_API + `Borrow/mybooks?userId=${id}`, {
+            const response = await fetch(API + `Borrow/mybooks?userId=${id}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },

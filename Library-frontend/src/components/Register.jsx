@@ -9,8 +9,8 @@ import '../css/Register.css';
 function Register() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-
   const { setEmail, getIdByEmail } = useContext(UserContext);
+  const API = import.meta.env.VITE_API;
 
   const onFinish = async (values) => {
     if (values.password_One !== values.password_Two) {
@@ -19,7 +19,7 @@ function Register() {
     }
 
     try {
-      const response = await fetch(process.env.REACT_APP_API + 'User/register', {
+      const response = await fetch(API + 'User/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
