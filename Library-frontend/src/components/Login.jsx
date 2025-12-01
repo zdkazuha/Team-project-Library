@@ -13,7 +13,7 @@ function Login() {
 
   const onFinish = async (values) => {
     try {
-      const response = await fetch('https://localhost:7167/api/User/login', {
+      const response = await fetch(process.env.REACT_APP_API + 'User/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

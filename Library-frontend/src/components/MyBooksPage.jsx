@@ -17,7 +17,7 @@ function MyBooksPage() {
         if (!email) return;
 
         try {
-            const response = await fetch(`https://localhost:7167/api/Borrow/mybooks?userId=${id}`, {
+            const response = await fetch(process.env.REACT_APP_API + `Borrow/mybooks?userId=${id}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },

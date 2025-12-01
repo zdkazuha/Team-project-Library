@@ -18,14 +18,14 @@ function BookPage() {
     const {id } = useParams();
     
     useEffect(() => {
-        fetchData(`https://localhost:7167/api/Book/${id}`, setBook);
+        fetchData(process.env.REACT_APP_API + `Book/${id}`, setBook);
     }, [id]);
 
     useEffect(() => {
         if (!book) return;
-        fetchData(`https://localhost:7167/api/Genre/${book.genreId}`, setGenre);
-        fetchData(`https://localhost:7167/api/Author/${book.authorId}`, setAuthor);
-        fetchData(`https://localhost:7167/api/Review?bookTitle=${encodeURIComponent(book.title)}&pageNumber=1`, setReview);
+        fetchData(process.env.REACT_APP_API + `Genre/${book.genreId}`, setGenre);
+        fetchData(process.env.REACT_APP_API + `Author/${book.authorId}`, setAuthor);
+        fetchData(process.env.REACT_APP_API + `Review?bookTitle=${encodeURIComponent(book.title)}&pageNumber=1`, setReview);
         isWishlistFunc();
         isBorrowFunc();
     }, [book]);
@@ -45,7 +45,7 @@ function BookPage() {
 
     const handleReviewAdded = () => {
         if (book) {
-            fetchData(`https://localhost:7167/api/Review?bookTitle=${encodeURIComponent(book.title)}&pageNumber=1`, setReview);
+            fetchData(process.env.REACT_APP_API + `Review?bookTitle=${encodeURIComponent(book.title)}&pageNumber=1`, setReview);
         }
     }
 
@@ -68,7 +68,7 @@ function BookPage() {
       if (!book) return;
 
       try {
-        const response = await fetch(`https://localhost:7167/api/Wishlist/CreateByUserName?bookId=${book.id}&userId=${userId}`, {
+        const response = await fetch(process.env.REACT_APP_API + `Wishlist/CreateByUserName?bookId=${book.id}&userId=${userId}`, {
           method: 'POST',
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
         });
@@ -92,7 +92,7 @@ async function RemoveFromWishlist() {
   if (!book) return;
 
   try {
-    const response = await fetch(`https://localhost:7167/api/Wishlist/DeleteByUsername?bookId=${book.id}&userId=${userId}`, {
+    const response = await fetch(process.env.REACT_APP_API + `Wishlist/DeleteByUsername?bookId=${book.id}&userId=${userId}`, {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
     });
@@ -113,7 +113,7 @@ async function RemoveFromWishlist() {
 
     function isWishlistFunc() {
         if(isAuth()) {
-          fetch(`https://localhost:7167/api/Wishlist/isWishlist/${id}?userId=${userId}`, {
+          fetch(process.env.REACT_APP_API + `Wishlist/isWishlist/${id}?userId=${userId}`, {
             headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
           })
           .then(response => response.json())
@@ -137,7 +137,7 @@ async function RemoveFromWishlist() {
     }
 
     function BorrowBook() {
-      fetch(`https://localhost:7167/api/Borrow/borrow`, {
+      fetch(process.env.REACT_APP_API + `Borrow/borrow`, {
           method: "POST",
           headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -156,7 +156,7 @@ async function RemoveFromWishlist() {
     }
 
     function ReturnBook() {
-      fetch(`https://localhost:7167/api/Borrow/return?bookId=${id}&userId=${userId}`, {
+      fetch(process.env.REACT_APP_API + `Borrow/return?bookId=${id}&userId=${userId}`, {
         method: "PUT",
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
       })
@@ -170,7 +170,7 @@ async function RemoveFromWishlist() {
     }
 
     function isBorrowFunc() {
-      fetch(`https://localhost:7167/api/Borrow/isBorrow/?bookId=${id}&userId=${userId}`, {
+      fetch(process.env.REACT_APP_API + `Borrow/isBorrow/?bookId=${id}&userId=${userId}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
       })
       .then(response => response.json())
