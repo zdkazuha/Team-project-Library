@@ -43,7 +43,8 @@ namespace Library.Controllers
         // Create
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateBookDto dto)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Create([FromForm] CreateBookDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

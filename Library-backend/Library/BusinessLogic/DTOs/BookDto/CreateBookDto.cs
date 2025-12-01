@@ -10,7 +10,7 @@ namespace BusinessLogic.Configurations.DTOs.BookDto
     public class CreateBookDto
     {
         public string Title { get; set; }
-        public string CoverImage { get; set; }
+        public IFormFile CoverImage { get; set; }
         public DateTime PublishedDate { get; set; }
         public int AvailableCopies { get; set; }
         public int AuthorId { get; set; }

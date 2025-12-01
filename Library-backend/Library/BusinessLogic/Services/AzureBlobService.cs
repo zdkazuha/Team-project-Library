@@ -39,8 +39,15 @@ public class AzureBlobService : IFileService
         return blob.Uri.ToString();
     }
 
-    public Task DeleteImage(string path)
+    public async Task DeleteImage(string path)
     {
-        throw new NotImplementedException();
+       var client = new BlobContainerClient(connectionString, containerName);
+
+        if (!await client.ExistsAsync()) return;
+
+        string fileName = Path.GetFileName(new Uri(path).LocalPath);
+
+        var blob = client.GetBlobClient(fileName);
+        await blob.DeleteIfExistsAsync();
     }
 }
