@@ -9,12 +9,12 @@ function RentalHistoryPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
-
+  const API = import.meta.env.VITE_API;
   useEffect(() => { fetchHistory(); }, []);
 
   async function fetchHistory() {
     try {
-      const response = await fetch(process.env.REACT_APP_API + `History?userId=${id}`, {
+      const response = await fetch(API + `History?userId=${id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       if (response.ok) {

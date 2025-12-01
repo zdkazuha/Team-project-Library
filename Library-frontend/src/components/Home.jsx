@@ -8,6 +8,8 @@ function Home() {
     const [page, setPage] = useState(1);
     const [searchInput, setSearchInput] = useState('');
     const [searchQuery, setSearchQuery] = useState('');
+    
+    const API = import.meta.env.VITE_API;
 
     useEffect(() => {
         fetchBooks();
@@ -15,7 +17,7 @@ function Home() {
 
     async function fetchBooks() {
         const searchParam = searchQuery ? `&search=${encodeURIComponent(searchQuery)}` : '';
-        const api = process.env.REACT_APP_API + `Book?pageNumber=${page}${searchParam}`;
+        const api = API + `Book?pageNumber=${page}${searchParam}`;
 
         try {
             const response = await fetch(api);

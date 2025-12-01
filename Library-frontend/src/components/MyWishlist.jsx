@@ -8,7 +8,8 @@ import '../css/MyWishlist.css';
 function MyWishlist() {
     const [books, setBooks] = useState([]);
     const { id, email } = useContext(UserContext);
-
+    const API = import.meta.env.VITE_API;
+    
     useEffect(() => {
         fetchBooks();
     }, []);
@@ -17,7 +18,7 @@ function MyWishlist() {
         if (!email) return;
 
         try {
-            const response = await fetch(process.env.REACT_APP_API + `Wishlist/mywishlist?userId=${id}`, {
+            const response = await fetch(API + `Wishlist/mywishlist?userId=${id}`, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
