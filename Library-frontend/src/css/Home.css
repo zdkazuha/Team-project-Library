@@ -18,7 +18,8 @@
 
 .home-buttons {
     text-align: center;
-    padding-top: 150px;
+    padding-top: 135px;
+    margin-bottom: 30px;
     display: flex;
     justify-content: center;
     gap: 20px;
@@ -51,8 +52,15 @@
     cursor: not-allowed;
 }
 
+.wrapper {
+    padding: 1px 0px 0px 0px;
+    background-color: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(6px);
+}
+
 .cards {
     margin-top: 40px;
+    display: flex;
 }
 
 .no-books {

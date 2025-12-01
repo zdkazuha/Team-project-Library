@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace BusinessLogic.Configurations.DTOs.BookDto
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public string CoverImage { get; set; }
+        public IFormFile? CoverImage { get; set; }
         public DateTime PublishedDate { get; set; }
         public int AvailableCopies { get; set; }
         public int AuthorId { get; set; }

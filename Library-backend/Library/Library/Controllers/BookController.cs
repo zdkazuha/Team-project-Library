@@ -33,7 +33,7 @@ namespace Library.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var book = await _bookService.GetByIdAsync(id);
+            var book = await _bookService.GetByIdAsync(id); 
             if (book == null)
                 return NotFound($"Book with id {id} not found.");
 
@@ -43,7 +43,8 @@ namespace Library.Controllers
         // Create
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateBookDto dto)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Create([FromForm] CreateBookDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -55,7 +56,8 @@ namespace Library.Controllers
         // Update
         [Authorize(Roles = "Admin")]
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(int id, [FromBody] UpdateBookDto dto)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Update(int id, [FromForm] UpdateBookDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

@@ -19,6 +19,7 @@ const items = [
     { key: 'rental_history', label: <Link to='rental_history'>Rental History</Link>, icon: <AlignLeftOutlined /> },
     { key: 'my_wishlist', label: <Link to='my_wishlist'>My Wishlist</Link>, icon: <BookOutlined /> },
     { key: 'my_books', label: <Link to='my_books'>My Books</Link>, icon: <BookOutlined /> },
+    { key: 'credits', label: <Link to='credits'>Credits</Link>, icon: <UserOutlined /> },
     // ...(isAdmin ? [{
     //     key: 'add_book',
     //     label: <Link to='add_book'>Add Book</Link>,

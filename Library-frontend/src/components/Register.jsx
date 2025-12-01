@@ -1,17 +1,22 @@
 import React, { useContext } from 'react';
 import { Button, Form, Input } from 'antd';
 import image from '../img/Login.jpg';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../contexts/User.context.jsx';
+import { toast } from './ToastContainer';
 import '../css/Register.css';
 
 function Register() {
   const [form] = Form.useForm();
   const navigate = useNavigate();
+
   const { setEmail, getIdByEmail } = useContext(UserContext);
 
   const onFinish = async (values) => {
-    if (values.password_One !== values.password_Two) return;
+    if (values.password_One !== values.password_Two) {
+      toast.error('Passwords are not the same');
+      return;
+    }
 
     try {
       const response = await fetch('https://localhost:7167/api/User/register', {
@@ -23,16 +28,21 @@ function Register() {
         })
       });
 
-      if (!response.ok) throw new Error('Login failed');
+      if (!response.ok) {
+        toast.error('Register failed.');
+        return;
+      }
 
       const data = await response.json();
       localStorage.setItem('token', data.token);
+
       setEmail(values.username);
       getIdByEmail(values.username);
+
+      toast.success('Register successful!');
       navigate('/');
     } catch (error) {
-      console.error('Error:', error);
-      alert('Login failed');
+      toast.error('Register failed.');
     }
   };
 
@@ -46,7 +56,9 @@ function Register() {
       style={{ backgroundImage: `url(${image})` }}
     >
       <div className="form-container">
+
         <h1 className="welcome">Please register</h1>
+
         <Form
           className="form-antd"
           name="basic"
@@ -85,7 +97,15 @@ function Register() {
               Submit
             </Button>
           </Form.Item>
+
+          <Form.Item>
+            <Link to="/login">
+              <Button type="primary">Login</Button>
+            </Link>
+
+          </Form.Item>
         </Form>
+
       </div>
     </div>
   );

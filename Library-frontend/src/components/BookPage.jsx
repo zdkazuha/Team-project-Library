@@ -3,13 +3,14 @@ import image from "../img/BookPage.png"
 import { useParams } from "react-router-dom";
 import AddReviewModal from "./AddReviewModal";
 import { UserContext } from "../contexts/User.context";
+import { toast } from './ToastContainer';
 import '../css/BookPage.css';
 
 function BookPage() {
     const {id: userId, isAuth } = useContext(UserContext);
     const [showModal, setShowModal] = useState(false);
     const [isWishlist, setWishlist] = useState(false);
-    const [isBorrow, setBorrow] = useState();
+    const [isBorrow, setBorrow] = useState(false);
     const [review, setReview] = useState([]);
     const [author, setAuthor] = useState();
     const [genre, setGenre] = useState();
@@ -30,14 +31,17 @@ function BookPage() {
     }, [book]);
 
     async function fetchData(url, setState) {
-        try {
-            const response = await fetch(url);
-            const data = await response.json();
-            setState(data);
-        } catch (err) {
-            console.error("Error fetching data:", err);
-        }
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Failed to fetch data");
+        const data = await response.json();
+        setState(data);
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        toast.error("Failed to load data");
+      }
     }
+
 
     const handleReviewAdded = () => {
         if (book) {
@@ -49,7 +53,7 @@ function BookPage() {
       if(!book) return;
 
       if(!isAuth()) {
-        alert('You need to be logged in to add books to your wishlist.');
+        toast.info('You need to be logged in to add books to your wishlist.')
         return;
       }
 
@@ -61,44 +65,51 @@ function BookPage() {
     }
 
     async function AddToWishlist() {
+      if (!book) return;
+
       try {
-          const response = await fetch(`https://localhost:7167/api/Wishlist/CreateByUserName?bookId=${book.id}&userId=${userId}`, {
-              method: 'POST',
-              headers: {
-                  Authorization: `Bearer ${localStorage.getItem("token")}`
-              }
-          })
+        const response = await fetch(`https://localhost:7167/api/Wishlist/CreateByUserName?bookId=${book.id}&userId=${userId}`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+        });
 
-          if (!response.ok) {
-              const error = await response.text();
-              console.error("Failed to add to wishlist:", error);
-              return;
-          }
+        if (!response.ok) {
+          toast.error("Failed to add to wishlist");
+          return;
+        }
 
-          const data = await response.json();
-          setWishlist(true);
-          console.log("Added to wishlist:", data);
+        setWishlist(true);
+        toast.success("Book added to wishlist");
       } catch (err) {
-          console.error("Error:", err);
+        console.error("Error:", err);
+        toast.error("Something went wrong");
       }
-  }
-
-
-    function RemoveFromWishlist() {
-        fetch(`https://localhost:7167/api/Wishlist/DeleteByUsername?bookId=${book.id}&userId=${userId}`, {
-            method: 'DELETE',
-            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-        })
-        .then(response => {
-            if (!response.ok) { throw new Error("Failed to remove from wishlist"); }
-            return response.text();
-        })
-        .then(data => {
-            console.log("Removed from wishlist:", data);
-        })
-        .catch(err => console.error("Error:", err));
-        setWishlist(false);
     }
+
+
+
+async function RemoveFromWishlist() {
+  if (!book) return;
+
+  try {
+    const response = await fetch(`https://localhost:7167/api/Wishlist/DeleteByUsername?bookId=${book.id}&userId=${userId}`, {
+      method: 'DELETE',
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    });
+
+    if (!response.ok) {
+      toast.error("Failed to remove from wishlist");
+      return;
+    }
+
+    setWishlist(false);
+    toast.success("Book removed from wishlist");
+  } catch (err) {
+    console.error("Error:", err);
+    toast.error("Something went wrong");
+  }
+}
+
 
     function isWishlistFunc() {
         if(isAuth()) {
@@ -114,7 +125,7 @@ function BookPage() {
         if(!book) return;
 
         if(!isAuth()) {
-          alert('You need to be logged in to borrow books.');
+          toast.info('You need to be logged in to borrow books.');
           return;
         }
 
@@ -142,7 +153,6 @@ function BookPage() {
       })
       .then(response => response.json())
       .then(data => setBorrow(data));
-      console.log(data);
     }
 
     function ReturnBook() {
@@ -150,13 +160,17 @@ function BookPage() {
         method: "PUT",
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
       })
-      .then(response => { if (response.ok) return true; throw new Error("Return failed"); })
+      .then(response => { 
+        if (response.ok) 
+          return true; 
+        throw new Error("Return failed"); 
+      })
       .then(() => setBorrow(false))
       .catch(err => console.error(err));
     }
 
     function isBorrowFunc() {
-      fetch(`https://localhost:7167/api/Borrow/isBorrow/${id}?userId=${userId}`, {
+      fetch(`https://localhost:7167/api/Borrow/isBorrow/?bookId=${id}&userId=${userId}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
       })
       .then(response => response.json())
@@ -171,17 +185,17 @@ function BookPage() {
                     <img src={book.coverImage} alt={book.title} className="book-info-image" />
 
                     <button className="wishlist-button" onClick={AddOrRemoveWishlist}>
-                        { isWishlist === false ? 'Add (wishlist)' : 'Remove (wishlist)' }
+                        { !isWishlist? 'Add (wishlist)' : 'Remove (wishlist)' }
                     </button>
 
                     <button className="borrow-button" onClick={BorrowOrReturnBook}>
-                        { isBorrow === false ? 'Borrow' : 'Return' }
+                        { !isBorrow? 'Borrow' : 'Return' }
                     </button>
                 </div>
 
                 <div className="book-info">
                     <p>Title: {book.title}</p>
-                    <p>Published Date: {book.publishedDate.slice(0, 10)}</p>
+                    <p>Published Date: {book.publishedDate?.slice(0, 10)}</p>
                     <p>Available Copies: {book.availableCopies}</p>
                     <p>Author: {author?.name}</p>
                     <p>Genre: {genre?.name}</p>
@@ -198,7 +212,7 @@ function BookPage() {
                                     <span>⭐ {r.rating}</span>
                                 </div>
                                 <p>{r.comment}</p>
-                                <p className="review-date">{r.createdAt?.slice(0, 10)} {r.createdAt?.slice(11, 19)}</p>
+                                <p className="review-date">{r.createdAt?.slice(0, 10)}</p>
                             </div>
                           ))
                         ) : (

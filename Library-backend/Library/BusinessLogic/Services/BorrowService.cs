@@ -46,6 +46,7 @@ namespace BusinessLogic.Services
         public async Task<BorrowDto> CreateAsync(CreateBorrowDto dto)
         {
             var book = await _bookRepository.GetByIdAsync(dto.BookId);
+
             if (book == null)
                 throw new Exception("Book not found.");
 
@@ -167,7 +168,7 @@ namespace BusinessLogic.Services
             var wishlists = await _borrowRepository.GetAllAsync(
                 1,
                 10,
-                filtering: filters.And(w => w.BookId == bookId && w.UserId == userId),
+                filtering: filters.And(w => w.BookId == bookId && w.UserId == userId && w.ReturnedAt == null),
                 "Book", "User"
                 );
 

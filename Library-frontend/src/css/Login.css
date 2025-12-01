@@ -16,7 +16,7 @@
     align-items: center;
     text-align: center;
     padding: 40px;
-    height: 450px;
+    height: 500px;
     border-radius: 15px;
     box-shadow: 0 0 20px rgba(0,0,0,0.6);
     backdrop-filter: blur(6px);
@@ -57,6 +57,7 @@
     border: none;
     box-shadow: 0 6px 15px rgba(0, 86, 234, 0.4);
     transition: all 0.3s ease;
+    margin-left: 30px;
 }
 
 .login-submit-btn:hover {

@@ -1,0 +1,49 @@
+h1 {
+    cursor: pointer;
+}
+
+hr {
+    margin: 10px 40px 0px 40px;
+    color: rgb(177, 129, 27);
+}
+
+.credits-container.baground {
+    min-height: 100vh;
+    width: 100%;
+    background-image: url('../img/Home.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.welcome {
+    margin: 0;
+    text-align: center;
+    color: rgba(255, 255, 255, 1);
+    font-weight: bold;
+    font-size: 45px;
+}
+
+.credits-content {
+    text-align: center;
+    margin: 20px 40px 0px 40px;    
+}
+
+.credits-content ul {
+    text-align: left;
+    font-size: 18px;
+    overflow-wrap: break-word;  
+}
+
+.credits-content li {
+    margin-bottom: 15px;
+}
+
+.credits-content .ant-card  {
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(6px);
+}
+
+.display-none {
+    display: none;
+}

@@ -1,18 +1,19 @@
-﻿using DataAccess.Data;
-using DataAccess.Data.Entities;
-using DataAccess.Repositories;
-using Microsoft.EntityFrameworkCore;
-using BusinessLogic.Configurations;
+﻿using BusinessLogic.Configurations;
 using BusinessLogic.DTOs.Auth;
 using BusinessLogic.Interfaces;
 using BusinessLogic.Services;
+using Core.Services;
+using DataAccess.Data;
+using DataAccess.Data.Entities;
+using DataAccess.Data.Seeding;
+using DataAccess.Repositories;
+using Library;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
-using DataAccess.Data.Seeding;
-using Library;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowReactApp", policy =>
     {
         policy.WithOrigins(
+            "https://library-a32de.web.app",
             "http://localhost:5173",
             "http://127.0.0.1:5173",
             "https://localhost:5173",
@@ -34,7 +36,7 @@ builder.Services.AddCors(options =>
 });
 
 // Connection String
-string SomeeStr = builder.Configuration.GetConnectionString("SomeeStr")
+string SomeeStr = builder.Configuration.GetConnectionString("AzureStr")
     ?? throw new InvalidOperationException("Connection string 'SomeeStr' not found.");
 
 // Controllers
@@ -45,6 +47,7 @@ builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<IBorrowService, BorrowService>();
 builder.Services.AddScoped<IWishlistService, WishlistService>();
 builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<IFileService, AzureBlobService>();
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();

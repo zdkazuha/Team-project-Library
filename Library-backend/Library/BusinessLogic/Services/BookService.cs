@@ -11,11 +11,13 @@ namespace BusinessLogic.Services
     public class BookService : IBookService
     {
         private readonly IRepository<Book> _bookRepository;
+        private readonly IFileService _fileService;
         private readonly IMapper _mapper;
 
-        public BookService(IRepository<Book> bookRepository, IMapper mapper)
+        public BookService(IRepository<Book> bookRepository, IFileService fileService, IMapper mapper)
         {
             _bookRepository = bookRepository;
+            _fileService = fileService;
             _mapper = mapper;
         }
 
@@ -35,7 +37,7 @@ namespace BusinessLogic.Services
 
             var books = await _bookRepository.GetAllAsync(
                 pageNumber,
-                pageSize: 10,
+                pageSize: 13,
                 filters,
                 new[] { "Author", "Genre" }
             );
@@ -52,6 +54,8 @@ namespace BusinessLogic.Services
         public async Task<BookDto> CreateAsync(CreateBookDto dto)
         {
             var book = _mapper.Map<Book>(dto);
+            book.CoverImage = await _fileService.SaveImage(dto.CoverImage);
+
             await _bookRepository.AddAsync(book);
             return _mapper.Map<BookDto>(book);
         }
@@ -61,11 +65,18 @@ namespace BusinessLogic.Services
             var book = await _bookRepository.GetByIdAsync(id);
             if (book == null) return null;
 
+            if (dto.CoverImage != null)
+            {
+                book.CoverImage = await _fileService.UpdateImage(book.CoverImage, dto.CoverImage);
+            }
+
             _mapper.Map(dto, book);
+
             await _bookRepository.UpdateAsync(book);
 
             return _mapper.Map<BookDto>(book);
         }
+
 
         public async Task<bool> DeleteAsync(int id)
         {
@@ -73,6 +84,7 @@ namespace BusinessLogic.Services
             if (book == null) return false;
 
             await _bookRepository.DeleteAsync(book);
+            await _fileService.DeleteImage(book.CoverImage);
             return true;
         }
     }

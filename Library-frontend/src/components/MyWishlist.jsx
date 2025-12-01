@@ -15,6 +15,7 @@ function MyWishlist() {
 
     async function fetchBooks() {
         if (!email) return;
+
         try {
             const response = await fetch(`https://localhost:7167/api/Wishlist/mywishlist?userId=${id}`, {
                 headers: {
@@ -24,7 +25,6 @@ function MyWishlist() {
             if (response.ok) {
                 const data = await response.json();
                 setBooks(data);
-                console.log(data);
             }
         } catch (error) {
             console.error("Error fetching your books:", error);
@@ -33,14 +33,16 @@ function MyWishlist() {
 
     return (
         <div className="baground-wishlist" style={{ backgroundImage: `url(${image})` }}>
+
             <h1 className="welcome-wishlist">Your Wishlist</h1>
+
             {books === null || books.length === 0 ? (
                 <h1 className="no-books-wishlist">You do not have books in Wishlist</h1>
             ) : (
                 <div className="cards-wishlist">
-                    <Row gutter={[0, 0]}>
+                    <Row>
                         {books.map(book => (
-                            <Col key={book.id} span={4.5}>
+                            <Col key={book.id}>
                                 <BookCard Book={{ id: book.bookId, title: '', coverImage: book.bookCoverImage }} />
                             </Col>
                         ))}

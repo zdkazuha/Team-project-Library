@@ -15,6 +15,7 @@ function MyBooksPage() {
 
     async function fetchBooks() {
         if (!email) return;
+
         try {
             const response = await fetch(`https://localhost:7167/api/Borrow/mybooks?userId=${id}`, {
                 headers: {
@@ -33,15 +34,16 @@ function MyBooksPage() {
 
     return (
         <div className="baground-mybooks" style={{ backgroundImage: `url(${image})` }}>
+
             <h1 className="welcome-mybooks">Your books</h1>
 
             {books === null || books.length === 0 ? (
                 <h1 className="no-books-mybooks">You do not have books</h1>
             ) : (
                 <div className="cards-mybooks">
-                    <Row gutter={[16, 16]}>
+                    <Row>
                         {books.map(book => (
-                            <Col key={book.id} span={4.5}>
+                            <Col key={book.id}>
                                 <BookCard Book={{ id: book.bookId, title: book.title, coverImage: book.coverImage }} />
                             </Col>
                         ))}
