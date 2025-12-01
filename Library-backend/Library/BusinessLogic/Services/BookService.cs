@@ -65,12 +65,18 @@ namespace BusinessLogic.Services
             var book = await _bookRepository.GetByIdAsync(id);
             if (book == null) return null;
 
+            if (dto.CoverImage != null)
+            {
+                book.CoverImage = await _fileService.UpdateImage(book.CoverImage, dto.CoverImage);
+            }
 
             _mapper.Map(dto, book);
+
             await _bookRepository.UpdateAsync(book);
-            await _fileService.SaveImage(dto.CoverImage);
+
             return _mapper.Map<BookDto>(book);
         }
+
 
         public async Task<bool> DeleteAsync(int id)
         {

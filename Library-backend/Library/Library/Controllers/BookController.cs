@@ -56,7 +56,8 @@ namespace Library.Controllers
         // Update
         [Authorize(Roles = "Admin")]
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(int id, [FromBody] UpdateBookDto dto)
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Update(int id, [FromForm] UpdateBookDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

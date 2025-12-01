@@ -22,7 +22,9 @@ namespace BusinessLogic.Configurations
             // Book
             CreateMap<Book, BookDto>().ReverseMap();
             CreateMap<Book, CreateBookDto>().ReverseMap();
-            CreateMap<Book, UpdateBookDto>().ReverseMap();
+            CreateMap<Book, UpdateBookDto>();
+            CreateMap<UpdateBookDto, Book>()  
+                .ForMember(dest => dest.CoverImage, opt => opt.Ignore());
 
             // Borrow (Rent)
             CreateMap<Borrow, BorrowDto>()
