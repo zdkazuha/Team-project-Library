@@ -167,7 +167,7 @@ namespace BusinessLogic.Services
             var wishlists = await _borrowRepository.GetAllAsync(
                 1,
                 10,
-                filtering: filters.And(w => w.BookId == bookId && w.UserId == userId),
+                filtering: filters.And(w => w.BookId == bookId && w.UserId == userId && w.ReturnedAt == null),
                 "Book", "User"
                 );
 

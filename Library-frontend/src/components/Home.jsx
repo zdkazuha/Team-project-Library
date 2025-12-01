@@ -83,14 +83,16 @@ function Home() {
             {books.length === 0 ? (
                 <h1 className="no-books">Books not found</h1>
             ) : (
-                <div className="cards">
-                    <Row gutter={[0, 0]}>
-                        {books.map(book => (
-                            <Col key={book.id} span={4.5}>
-                                <BookCard Book={book} />
-                            </Col>
-                        ))}
-                    </Row>
+                <div className="wrapper">
+                    <div className="cards">
+                        <Row>
+                            {books.map(book => (
+                                <Col key={book.id}>
+                                    <BookCard Book={book} />
+                                </Col>
+                            ))}
+                        </Row>
+                    </div>
                 </div>
             )}
         </div>

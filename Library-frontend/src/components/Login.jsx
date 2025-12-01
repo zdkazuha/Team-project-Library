@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import { Button, Form, Input } from 'antd';
 import image from '../img/Login.jpg';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { UserContext } from '../contexts/User.context.jsx';
-import '../css/Login.css';
 import { toast } from './ToastContainer';
+import '../css/Login.css';
 
 function Login() {
   const [form] = Form.useForm();
@@ -23,21 +23,21 @@ function Login() {
       });
 
       if (!response.ok) {
-        toast.error('❌ Login failed.');
+        toast.error('Login failed.');
         return;
       }
 
       const data = await response.json();
 
       localStorage.setItem('token', data.token);
+
       setEmail(values.username);
       getIdByEmail(values.username);
 
-      toast.success('✅ Login successful!');
+      toast.success('Login successful!');
       navigate('/');
     } catch (error) {
-      console.error('Error:', error);
-      toast.error('❌ Login failed.');
+      toast.error('Login failed.');
     }
   };
 
@@ -75,6 +75,10 @@ function Login() {
           </Form.Item>
 
           <Form.Item>
+            <Link to="/register">
+              <Button type="primary">Register</Button>
+            </Link>
+
             <Button type="primary" htmlType="submit" className="login-submit-btn">
               Submit
             </Button>

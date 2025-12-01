@@ -1,6 +1,7 @@
 import { useContext, useEffect } from "react";
 import { UserContext } from "../contexts/User.context";
 import { useNavigate } from "react-router-dom";
+import { toast } from './ToastContainer';
 
 function Logout() {
 
@@ -9,6 +10,8 @@ function Logout() {
 
     useEffect(() => {
         clear();
+
+        toast.success('✅ Logout successful!');
         navigate('/');
     }, []);
 

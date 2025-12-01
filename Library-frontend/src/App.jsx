@@ -10,6 +10,7 @@ import Login from './components/Login'
 import ToastContainer from './components/ToastContainer'
 import Logout from './components/Logout'
 import MyWishlist from './components/MyWishlist'
+import Credits from './components/Credits'
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
             <Route path='register' element={ <Register /> } />
             <Route path='login' element={<Login /> } />
             <Route path='logout' element={<Logout /> } />
+            <Route path='credits' element={<Credits /> } />
           </Route>
         </Routes>
       </BrowserRouter>

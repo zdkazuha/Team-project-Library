@@ -114,7 +114,7 @@ namespace WebAPI.Controllers
         }
 
         [Authorize]
-        [HttpGet("isBorrow/{bookId}")]
+        [HttpGet("isBorrow")]
         public async Task<IActionResult> IsBorrow(int bookId, string userId)
         {
             var isBorrowed = await _borrowService.isBorrow(bookId, userId);
