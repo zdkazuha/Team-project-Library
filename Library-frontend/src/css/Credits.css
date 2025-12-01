@@ -26,7 +26,8 @@ hr {
 
 .credits-content {
     text-align: center;
-    margin: 20px 40px 0px 40px;    
+    margin: 20px 40px 0px 40px;
+    color: white;    
 }
 
 .credits-content ul {
