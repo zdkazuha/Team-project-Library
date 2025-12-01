@@ -46,6 +46,7 @@ namespace BusinessLogic.Services
         public async Task<BorrowDto> CreateAsync(CreateBorrowDto dto)
         {
             var book = await _bookRepository.GetByIdAsync(dto.BookId);
+
             if (book == null)
                 throw new Exception("Book not found.");
 

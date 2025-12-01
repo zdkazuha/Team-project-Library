@@ -52,6 +52,7 @@ namespace BusinessLogic.Services
         public async Task<BookDto> CreateAsync(CreateBookDto dto)
         {
             var book = _mapper.Map<Book>(dto);
+
             await _bookRepository.AddAsync(book);
             return _mapper.Map<BookDto>(book);
         }
@@ -61,9 +62,9 @@ namespace BusinessLogic.Services
             var book = await _bookRepository.GetByIdAsync(id);
             if (book == null) return null;
 
+
             _mapper.Map(dto, book);
             await _bookRepository.UpdateAsync(book);
-
             return _mapper.Map<BookDto>(book);
         }
 

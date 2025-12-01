@@ -32,7 +32,7 @@ hr {
 .credits-content ul {
     text-align: left;
     font-size: 18px;
-    overflow-wrap: break-word;
+    overflow-wrap: break-word;  
 }
 
 .credits-content li {
