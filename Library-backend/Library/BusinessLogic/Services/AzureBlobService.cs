@@ -8,7 +8,6 @@ namespace Core.Services;
 
 public class AzureBlobService : IFileService
 {
-    // TODO: read value from appsettings
     private const string containerName = "images";
     private readonly string connectionString = null;
 
