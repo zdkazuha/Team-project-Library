@@ -19,7 +19,7 @@ function Credits() {
             <div className={flag === true ? "credits-content" : "credits-content display-none"}>
                 <Row gutter={16}>
                     <Col span={8}>
-                    <Card title="Artem" variant="borderless">
+                    <Card title="Artem" style={{color: 'white'}} variant="borderless">
                         <ul>
                             <li>Створив сторінки, дизайн та логіку для сторінок<br/> (MyWishlist, MyBooks, BookPage, Credits, Home, Register, Logout, Login)</li>
                             <li>Реалізація адаптивного вигляду для ноутбука</li>
@@ -29,7 +29,7 @@ function Credits() {
                     </Card>
                     </Col>
                     <Col span={8}>
-                    <Card title="Ilya" variant="borderless">
+                    <Card title="Ilya" style={{color: 'white'}} variant="borderless">
                         <ul>
                             <li>Створив логіку та вигляд пошуку для сторінки <br/> (Home)</li>
                             <li>Налаштував захищені маршрути (Private Route)</li>
@@ -38,7 +38,7 @@ function Credits() {
                     </Card>
                     </Col>
                     <Col span={8}>
-                    <Card title="Yaroslav" variant="borderless">
+                    <Card title="Yaroslav" style={{color: 'white'}} variant="borderless">
                         <ul>
                             <li>Створив сторінки, дизайн та логіку для сторінок<br/> (RentalHistory, AdminPanel)</li>
                             <li>Створив форму для додавання відгуків на сторінці<br/> (BookPage)</li>
@@ -52,7 +52,7 @@ function Credits() {
             <div className={flag === false ? "credits-content" : "credits-content display-none"}>
                 <Row gutter={16}>
                     <Col span={8}>
-                    <Card title="Artem" variant="borderless">
+                    <Card title="Artem" style={{color: 'white'}} variant="borderless">
                         <ul>
                             <li>Реалізував ендпоінти<br/>(Для: отримування користувача за його почтою, отримування бажаних та орендованих книг користувача за його Id)</li>
                             <li>Створив (Interface, Service, Controller)<br/>(Author, Review, Genre)</li>
@@ -64,7 +64,7 @@ function Credits() {
                     </Card>
                     </Col>
                     <Col span={8}>
-                    <Card title="Ilya" variant="borderless">
+                    <Card title="Ilya" style={{color: 'white'}} variant="borderless">
                         <ul>
                             <li>Реалізував ендпоінти<br/>(Для: видачі та повернення киниги, отримання орендованих книг, перевірки статусу книги, пошуку книг)</li>
                             <li>Створив (Interface, Service, Controller)<br/>(Borrow, User)</li>
@@ -75,7 +75,7 @@ function Credits() {
                     </Card>
                     </Col>
                     <Col span={8}>
-                    <Card title="Yaroslav" variant="borderless">
+                    <Card title="Yaroslav" style={{color: 'white'}} variant="borderless">
                         <ul>
                             <li>Реалізував ендпоінти<br/>(Для: отримання історії оренд користувача)</li>
                             <li>Створив (Interface, Service, Controller)<br/>(History, Wishlist, Book)</li>
