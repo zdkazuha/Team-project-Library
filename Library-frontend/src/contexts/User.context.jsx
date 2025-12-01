@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from 'react';
+const API = import.meta.env.VITE_API;
 
 export const UserContext = createContext({
     id: null,    
@@ -35,7 +36,7 @@ export const UserProvider = ({ children }) => {
     const isAdmin = () => email === "admin@library.com";
     const getIdByEmail = async (email) => {
         try {
-            const response = await fetch(`https://localhost:7167/api/User/user/${email}`, {
+            const response = await fetch(API +`User/user/${email}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type' : 'application/json',
